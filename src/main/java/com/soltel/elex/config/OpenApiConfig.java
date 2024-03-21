@@ -14,7 +14,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
             .info(new Info()
-                .title("Endpoints Islantilla")
+                .title("Endpoints elex")
                 .description("Documentación de la API")
                 .version("v2.0"))
             .components(new Components()
