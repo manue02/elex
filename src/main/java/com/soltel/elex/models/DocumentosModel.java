@@ -1,5 +1,6 @@
 package com.soltel.elex.models;
 
+
 import jakarta.persistence.*;
 
 
@@ -25,6 +26,10 @@ public class DocumentosModel {
 
     @Column(name = "tipo")
     private String tipo;
+
+    @Column(name = "archivo")
+    @Lob
+    private byte[] archivo;
 
     @ManyToOne
     @JoinColumn(name = "expediente",nullable = false)
@@ -78,15 +83,24 @@ public class DocumentosModel {
         this.tipo = tipo;
     }
 
+    public ExpedientesModel getExpediente() {
+        return expediente;
+    }
+
+    public void setExpediente(ExpedientesModel expediente) {
+        this.expediente = expediente;
+    }
+
     public DocumentosModel() {
     }
 
-    public DocumentosModel(Integer id, String ruta, float tasa, Boolean vigente, String nombre, String tipo) {
-        this.id = id;
+    public DocumentosModel(String ruta, float tasa, Boolean vigente, String nombre, String tipo, ExpedientesModel expediente, byte[] archivo) {
         this.ruta = ruta;
         this.tasa = tasa;
         this.vigente = vigente;
         this.nombre = nombre;
         this.tipo = tipo;
+        this.expediente = expediente;
+        this.archivo = archivo;
     }
 }

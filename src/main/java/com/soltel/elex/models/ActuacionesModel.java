@@ -80,15 +80,23 @@ public class ActuacionesModel {
         this.responsable = responsable;
     }
 
+    public ExpedientesModel getExpediente() {
+        return expediente;
+    }
+
+    public void setExpediente(ExpedientesModel expediente) {
+        this.expediente = expediente;
+    }
+
     public ActuacionesModel() {
     }
 
-    public ActuacionesModel(Integer id, String descripcion, Boolean finalizado, LocalDate fecha, String observaciones, String responsable) {
-        this.id = id;
+    public ActuacionesModel(String descripcion, Boolean finalizado, LocalDate fecha, String observaciones, String responsable, ExpedientesModel expediente) {
         this.descripcion = descripcion;
         this.finalizado = finalizado;
         this.fecha = fecha;
         this.observaciones = observaciones;
         this.responsable = responsable;
+        this.expediente = expediente;
     }
 }

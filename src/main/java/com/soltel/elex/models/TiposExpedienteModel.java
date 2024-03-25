@@ -60,8 +60,7 @@ public class TiposExpedienteModel {
     public TiposExpedienteModel() {
     }
 
-    public TiposExpedienteModel(Integer id, String materia, Acciones acciones, Boolean activo) {
-        this.id = id;
+    public TiposExpedienteModel(String materia, Acciones acciones, Boolean activo) {
         this.materia = materia;
         this.acciones = acciones;
         this.activo = activo;

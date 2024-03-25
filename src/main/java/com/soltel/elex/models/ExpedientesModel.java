@@ -88,15 +88,23 @@ public class ExpedientesModel {
         this.descripcion = descripcion;
     }
 
+    public TiposExpedienteModel getTiposExpediente() {
+        return tiposExpediente;
+    }
+
+    public void setTiposExpediente(TiposExpedienteModel tiposExpediente) {
+        this.tiposExpediente = tiposExpediente;
+    }
+
     public ExpedientesModel() {
     }
 
-    public ExpedientesModel(Integer id, String codigo, LocalDate fecha, Estado estado, String opciones, String descripcion) {
-        this.id = id;
+    public ExpedientesModel(String codigo, LocalDate fecha, Estado estado, String opciones, String descripcion, TiposExpedienteModel tiposExpediente) {
         this.codigo = codigo;
         this.fecha = fecha;
         this.estado = estado;
         this.opciones = opciones;
         this.descripcion = descripcion;
+        this.tiposExpediente = tiposExpediente;
     }
 }
