@@ -63,4 +63,8 @@ public class ExpedientesService {
     public Optional<ExpedientesModel> findById(Integer id) {
         return expedientesRepository.findById(id);
     }
+
+    public List<ExpedientesModel> findByTipoId(Integer idTipo) {
+        return expedientesRepository.findByTipoId(idTipo);
+    }
 }

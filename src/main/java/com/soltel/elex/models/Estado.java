@@ -4,6 +4,6 @@ public enum Estado {
 
     Pendiente,
     Enviado,
-    Erroneo,
+    Erróneo,
 
 }

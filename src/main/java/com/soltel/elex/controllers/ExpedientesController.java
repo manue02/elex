@@ -96,6 +96,9 @@ public class ExpedientesController {
             if (tipoExpedienteBusqueda.isPresent()) {
                 TiposExpedienteModel tipoExpediente = tipoExpedienteBusqueda.get();
                 String codigoMayusculas = codigo.toUpperCase();
+                descripcion = tiposExpedientesService.subStringMateria(descripcion);
+                opciones = opciones.toLowerCase();
+
                 ExpedientesModel nuevoExpediente = new ExpedientesModel(codigoMayusculas, fecha, estado, opciones, descripcion, tipoExpediente);
                 return ResponseEntity.ok(expedientesService.saveExpediente(nuevoExpediente));
             } else {
@@ -129,8 +132,8 @@ public class ExpedientesController {
     
                 expediente.setFecha(fecha);
                 expediente.setEstado(estado);
-                expediente.setOpciones(opciones);
-                expediente.setDescripcion(descripcion);
+                expediente.setOpciones(opciones.toLowerCase());
+                expediente.setDescripcion(tiposExpedientesService.subStringMateria(descripcion));
                 expediente.setTiposExpediente(tipoExpediente);
                 expedientesService.saveExpediente(expediente);
                 return ResponseEntity.ok().body("Expediente modificado");
@@ -159,4 +162,22 @@ public class ExpedientesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los expedientes por estado y fecha: " + e.getMessage());
         }
     }
+
+    /**
+     * Método para obtener todos los expedientes asociados a un tipo de expediente específico.
+     *
+     * @param Tipo El ID del tipo de expediente para el cual se deben obtener los expedientes.
+     * @return Una respuesta HTTP que contiene una lista de expedientes si la operación fue exitosa,
+     *         o un mensaje de error si ocurrió un error.
+     */
+    @GetMapping("inner-JoinTipoExpediente/{Tipo}")
+    public ResponseEntity<?> getExpedientesInnerJoinTipoExpediente(@PathVariable Integer Tipo) {
+        try {
+            List<ExpedientesModel> expedientes = expedientesService.findByTipoId(Tipo);
+            return ResponseEntity.ok(expedientes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los expedientes por tipo: " + e.getMessage());
+        }
+    }
+    
 }

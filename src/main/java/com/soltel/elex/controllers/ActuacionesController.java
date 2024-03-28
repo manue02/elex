@@ -99,7 +99,7 @@ public class ActuacionesController {
                 ActuacionesModel actuacion = new ActuacionesModel(descripcion, finalizado, fecha, observaciones, responsableFormato, expedienteEncontrado);
                 return ResponseEntity.ok(actuacionesService.saveActuacion(actuacion));
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido insertar una nueva Actuacion revise los datos");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido insertar una nueva Actuacion revise los datos si están bien");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al insertar la actuación: " + e.getMessage());
@@ -118,7 +118,7 @@ public class ActuacionesController {
      * @param responsable el nuevo responsable de la actuación
      * @return un mensaje de éxito o un mensaje de error si no se pudo modificar
      */
-    @PostMapping("/modificar/{idActuacion}/{descripcion}/{finalizado}/{fecha}/{idExpediente}/{observaciones}/{responsable}")
+    @PutMapping("/modificar/{idActuacion}/{descripcion}/{finalizado}/{fecha}/{idExpediente}/{observaciones}/{responsable}")
     public ResponseEntity<?> modificarActuacion(@PathVariable Integer idActuacion,@PathVariable String descripcion, @PathVariable Boolean finalizado, @PathVariable LocalDate fecha, @PathVariable Integer idExpediente, @PathVariable String observaciones, @PathVariable String responsable) {
         try {
             Optional<ExpedientesModel> expediente = expedientesService.findById(idExpediente);
@@ -171,4 +171,20 @@ public class ActuacionesController {
         }
     }
 
+    /**
+     * Método para obtener todas las actuaciones asociadas a un expediente específico.
+     *
+     * @param expediente El ID del expediente para el cual se deben obtener las actuaciones.
+     * @return Una respuesta HTTP que contiene una lista de actuaciones si la operación fue exitosa,
+     *         o un mensaje de error si ocurrió un error.
+     */
+    @GetMapping("inner-joinExpediente/{expediente}")
+    public ResponseEntity<?> getActuacionesInnerJoinExpediente(@PathVariable Integer expediente) {
+        try {
+            List<ActuacionesModel> actuaciones = actuacionesService.findAllByExpedienteId(expediente);
+            return ResponseEntity.ok(actuaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener las actuaciones: " + e.getMessage());
+        }
+    }
 }

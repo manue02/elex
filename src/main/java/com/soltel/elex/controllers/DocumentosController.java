@@ -6,12 +6,20 @@ import com.soltel.elex.services.DocumentosService;
 import com.soltel.elex.services.ExpedientesService;
 import com.soltel.elex.services.TiposExpedientesService;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 
@@ -29,6 +37,9 @@ public class DocumentosController {
         this.expedientesService = expedientesService;
         this.tiposExpedientesService = tiposExpedientesService;
     }
+
+    @Value("${app.pdf-directory}")
+    private File fileDirectory;
 
     /**
      * Método para obtener todos los documentos.
@@ -48,19 +59,18 @@ public class DocumentosController {
     /**
      * Método para obtener documentos por nombre, tipo y estado de vigencia.
      *
-     * @param nombre El nombre del documento a buscar.
      * @param tipo El tipo de documento a buscar.
      * @param vigente El estado de vigencia del documento a buscar.
      * @return Una respuesta HTTP con los documentos encontrados o un mensaje de error.
      */
-    @GetMapping("/filtrado/{nombre}/{tipo}/{vigente}")
-    public ResponseEntity<?> getDocumentosPorNombreTipoVigente(@PathVariable String nombre, @PathVariable String tipo, @PathVariable Boolean vigente) {
+    @GetMapping("/filtrado/{tipo}/{vigente}")
+    public ResponseEntity<?> getDocumentosPorNombreTipoVigente(@PathVariable String tipo, @PathVariable Boolean vigente) {
         try {
-            List<DocumentosModel> documentos = documentosService.findByNombreAndTipoAndVigente(nombre, tipo, vigente);
+            List<DocumentosModel> documentos = documentosService.findByTipoAndVigente(tipo.toUpperCase(), vigente);
             if (documentos.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron ningún documento con el nombre " + nombre + " y tipo " + tipo + " y que este " + vigente);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron ningún documento con el tipo " + tipo + " y que este " + vigente);
             }
-            return ResponseEntity.ok().body("Documentos encontrados");
+            return ResponseEntity.ok().body(documentos);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los documentos: " + e.getMessage());
         }
@@ -70,7 +80,6 @@ public class DocumentosController {
      * Método para guardar un nuevo documento.
      *
      * @param file El archivo a guardar.
-     * @param ruta La ruta donde se guardará el archivo.
      * @param tasa La tasa asociada con el documento.
      * @param expediente El expediente al que pertenece el documento.
      * @param vigente Si el documento está vigente o no.
@@ -78,29 +87,86 @@ public class DocumentosController {
      * @param tipo El tipo de documento (PDF, DOC, etc.).
      * @return Una respuesta HTTP con el documento guardado o un mensaje de error.
      */
-    @PostMapping("/insertar/{ruta}/{tasa}/{vigente}/{nombre}/{tipo}/{expediente}")
-    public ResponseEntity<?> guardarDocumento(@RequestParam("file") MultipartFile file, @PathVariable String ruta, @PathVariable Float tasa, @PathVariable Integer expediente, @PathVariable Boolean vigente, @PathVariable String nombre, @PathVariable String tipo) {
+    @PostMapping(value = "/insertar/{tasa}/{vigente}/{nombre}/{tipo}/{expediente}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> guardarDocumento(@RequestPart("file") MultipartFile file, @PathVariable Float tasa, @PathVariable Integer expediente, @PathVariable Boolean vigente, @PathVariable String nombre, @PathVariable String tipo) {
         try {
             Optional<ExpedientesModel> expedienteEncontrado = expedientesService.findById(expediente);
 
-            String rutaPDF = "/var/www/html/Proyectos/Spring/elex/src/main/resources/PDF";
-            String nombreArchivo = file.getOriginalFilename();
-            File destino = new File(rutaPDF + "/" + nombreArchivo);
-            file.transferTo(destino);
-
-            byte[] archivo = file.getBytes();
-
             if (expedienteEncontrado.isPresent()) {
+                String nombreArchivo = file.getOriginalFilename();
+                assert nombreArchivo != null;
+                File destino = new File(fileDirectory, nombreArchivo);
+                Files.copy(file.getInputStream(), destino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                byte[] archivo = Files.readAllBytes(destino.toPath());
+
                 ExpedientesModel todoExpediente = expedienteEncontrado.get();
                 String tipoMayusculas = tipo.toUpperCase();
                 nombre = tiposExpedientesService.subStringMateria(nombre);
-                DocumentosModel documento = new DocumentosModel(destino.getAbsolutePath(), tasa,  vigente, nombre, tipoMayusculas, todoExpediente, archivo);
+
+                String rutaRelativa = destino.getPath().replaceFirst("^.*?src", "src");
+                DocumentosModel documento = new DocumentosModel(rutaRelativa, tasa,  vigente, nombre, tipoMayusculas, todoExpediente, archivo);
                 return ResponseEntity.ok(documentosService.saveDocumento(documento));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido insertar una nueva Actuacion revise los datos");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el documento: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Maneja una solicitud GET para descargar un archivo de la carpeta de recursos.
+     *
+     * @param nombreArchivo el nombre del archivo que se va a descargar
+     * @return una ResponseEntity que contiene el archivo como un recurso si el archivo existe,
+     *         o un mensaje de error si el archivo no se encuentra o si ocurre un error
+     */
+    @GetMapping("/descargar/{nombreArchivo}")
+    public ResponseEntity<?> descargarArchivo(@PathVariable String nombreArchivo) {
+        try {
+            String rutaArchivo = fileDirectory + "/" + nombreArchivo + ".pdf";
+            System.out.println(rutaArchivo);
+            Resource resource = new UrlResource(Paths.get(rutaArchivo).toUri());
+    
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + resource.getFilename() + "\"")                        
+                .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se pudo leer el archivo " + nombreArchivo);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al descargar el archivo: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Maneja una solicitud GET para descargar un archivo BLOB de la base de datos.
+     *
+     * @param idDocumento el ID del documento que se va a descargar
+     * @return una ResponseEntity que contiene el archivo como un recurso si el documento existe,
+     *         o un mensaje de error si el documento no se encuentra o si ocurre un error
+     */
+    @GetMapping("/descargar-blob/{idDocumento}")
+    public ResponseEntity<?> descargarArchivoBlob(@PathVariable Integer idDocumento) {
+        try {
+            Optional<DocumentosModel> documentoOptional = documentosService.findById(idDocumento);
+
+            if (documentoOptional.isPresent()) {
+                DocumentosModel documento = documentoOptional.get();
+                byte[] archivo = documento.getArchivo();
+
+                ByteArrayResource resource = new ByteArrayResource(archivo);
+
+                return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + documento.getNombre() + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se pudo encontrar el documento con ID " + idDocumento);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al descargar el archivo: " + e.getMessage());
         }
     }
 
@@ -115,7 +181,7 @@ public class DocumentosController {
      * @param expediente El expediente al que pertenece el documento.
      * @return Una respuesta HTTP con el documento modificado o un mensaje de error.
      */
-    @PostMapping("/modificar/{id}/{tasa}/{vigente}/{nombre}/{tipo}/{expediente}")
+    @PutMapping("/modificar/{id}/{tasa}/{vigente}/{nombre}/{tipo}/{expediente}")
     public ResponseEntity<?> modificarDocumento(@PathVariable Integer id, @PathVariable Float tasa, @PathVariable Boolean vigente, @PathVariable String nombre, @PathVariable String tipo, @PathVariable Integer expediente) {
         try {
             Optional<ExpedientesModel> expedienteEncontrado = expedientesService.findById(expediente);
@@ -145,7 +211,7 @@ public class DocumentosController {
      * @param vigente El estado de vigencia del documento a eliminar.
      * @return Una respuesta HTTP indicando si el documento fue eliminado o un mensaje de error.
      */
-    @DeleteMapping("/eliminar/{id}/{vigente}")
+    @PutMapping("/eliminar/{id}/{vigente}")
     public ResponseEntity<?> eliminarDocumento(@PathVariable Integer id, @PathVariable Boolean vigente) {
         try {
             Optional<DocumentosModel> documento = documentosService.findById(id);
@@ -161,4 +227,25 @@ public class DocumentosController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el documento: " + e.getMessage());
         }
     }
+
+    /**
+     * Método para obtener todos los documentos asociados a un expediente específico.
+     *
+     * @param expediente El ID del expediente para el cual se deben obtener los documentos.
+     * @return Una respuesta HTTP que contiene una lista de documentos si la operación fue exitosa y se encontraron documentos,
+     *         un mensaje de error si ocurrió un error, o un mensaje indicando que no se encontraron documentos si el expediente no tiene documentos asociados.
+     */
+    @GetMapping("inner-joinExpediente/{expediente}")
+    public ResponseEntity<?> getDocumentosInnerJoinExpediente(@PathVariable Integer expediente) {
+        try {
+            List<DocumentosModel> documentos = documentosService.findAllByExpedienteId(expediente);
+            if (documentos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron documentos para el expediente con ID " + expediente);
+            }
+            return ResponseEntity.ok().body(documentos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los documentos: " + e.getMessage());
+        }
+    }
+    
 }

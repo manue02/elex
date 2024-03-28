@@ -1,5 +1,6 @@
 package com.soltel.elex.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -29,6 +30,7 @@ public class DocumentosModel {
 
     @Column(name = "archivo")
     @Lob
+    @JsonIgnore
     private byte[] archivo;
 
     @ManyToOne
@@ -85,6 +87,10 @@ public class DocumentosModel {
 
     public ExpedientesModel getExpediente() {
         return expediente;
+    }
+
+    public byte[] getArchivo() {
+        return archivo;
     }
 
     public void setExpediente(ExpedientesModel expediente) {

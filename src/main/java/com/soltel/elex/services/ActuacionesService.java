@@ -22,6 +22,10 @@ public class ActuacionesService {
         return actuacionesRepository.findAll();
     }
 
+    public List<ActuacionesModel> findAllByExpedienteId(Integer expediente) {
+        return actuacionesRepository.findAllByExpedienteId(expediente);
+    }
+
     public Optional<ActuacionesModel> findById(Integer id) {
         return actuacionesRepository.findById(id);
     }

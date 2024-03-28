@@ -64,7 +64,7 @@ CREATE TABLE documentos
     vigente BOOLEAN DEFAULT 1,
     nombre VARCHAR(255) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
-    archivo BLOB NOT NULL,
+    archivo MEDIUMBLOB NOT NULL,
     FOREIGN KEY (expediente) REFERENCES expedientes (id),
     PRIMARY KEY PK_documentos (id)
 );

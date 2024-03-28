@@ -23,7 +23,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
             .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers("/actuaciones/**", "/documentos/**", "/expedientes", "/tiposExpedientes").permitAll()
+            		.requestMatchers("/actuaciones/**", "/documentos/**", "/expedientes/**", "/tiposExpedientes/**").permitAll()
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .defaultSuccessUrl("/inicio", true));

@@ -1,10 +1,12 @@
 package com.soltel.elex.services;
 
-import java.util.*;
+import com.soltel.elex.models.DocumentosModel;
+import com.soltel.elex.models.ExpedientesModel;
+import com.soltel.elex.repositories.IDocumentosRepository;
 import org.springframework.stereotype.Service;
 
-import com.soltel.elex.models.DocumentosModel;
-import com.soltel.elex.repositories.IDocumentosRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DocumentosService {
@@ -19,6 +21,10 @@ public class DocumentosService {
         return documentosRepository.findAll();
     }
 
+    public List<DocumentosModel> findAllByExpedienteId(Integer idExpediente) {
+        return documentosRepository.findAllByExpedienteId(idExpediente);
+    }
+
     public Optional<DocumentosModel> findById(Integer id) {
         return documentosRepository.findById(id);
     }
@@ -27,11 +33,11 @@ public class DocumentosService {
         return documentosRepository.save(documento);
     }
 
-    public List<DocumentosModel> findByExpediente(Integer expediente) {
+    public List<DocumentosModel> findByExpediente(ExpedientesModel expediente) {
         return documentosRepository.findByExpediente(expediente);
     }
 
-    public List<DocumentosModel> findByNombreAndTipoAndVigente(String nombre, String tipo , Boolean vigente) {
-        return documentosRepository.findByNombreAndTipoAndVigente(nombre, tipo, vigente);
+    public List<DocumentosModel> findByTipoAndVigente(String tipo , Boolean vigente) {
+        return documentosRepository.findByTipoAndVigente(tipo, vigente);
     }
 }
