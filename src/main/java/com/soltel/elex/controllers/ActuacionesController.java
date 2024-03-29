@@ -59,7 +59,8 @@ public class ActuacionesController {
      * @return una lista de actuaciones que coinciden con los criterios de búsqueda
      */
     @GetMapping("/filtrado/{responsable}/{fechaInicio}/{fechaFin}/{finalizado}")
-    public ResponseEntity<?> getActuacionesPorResponsableYFecha(@PathVariable String responsable, @PathVariable LocalDate fechaInicio, @PathVariable LocalDate fechaFin, @PathVariable Boolean finalizado) {
+    public ResponseEntity<?> getActuacionesPorResponsableYFecha(@PathVariable String responsable, @PathVariable LocalDate fechaInicio, 
+                                                                @PathVariable LocalDate fechaFin, @PathVariable Boolean finalizado) {
         try {
             String responsableFormato = actuacionesService.formatoResponsable(responsable);
             List<ActuacionesModel> actuacionesPorResponsableYFecha = actuacionesService.findByResponsableAndFechaBetweenAndFinalizado(responsableFormato, fechaInicio, fechaFin, finalizado);
@@ -86,7 +87,9 @@ public class ActuacionesController {
      * @return la actuación insertada o un mensaje de error si no se pudo insertar
      */
     @PostMapping("/insertar/{descripcion}/{finalizado}/{fecha}/{idExpediente}/{observaciones}/{responsable}")
-    public ResponseEntity<?> insertarActuacion(@PathVariable String descripcion, @PathVariable Boolean finalizado, @PathVariable LocalDate fecha, @PathVariable Integer idExpediente, @PathVariable String observaciones, @PathVariable String responsable) {
+    public ResponseEntity<?> insertarActuacion(@PathVariable String descripcion, 
+                                               @PathVariable Boolean finalizado, @PathVariable LocalDate fecha, @PathVariable Integer idExpediente, 
+                                               @PathVariable String observaciones, @PathVariable String responsable) {
         try {
             String responsableFormato = actuacionesService.formatoResponsable(responsable);
             Optional<ExpedientesModel> expediente = expedientesService.findById(idExpediente);
@@ -119,7 +122,9 @@ public class ActuacionesController {
      * @return un mensaje de éxito o un mensaje de error si no se pudo modificar
      */
     @PutMapping("/modificar/{idActuacion}/{descripcion}/{finalizado}/{fecha}/{idExpediente}/{observaciones}/{responsable}")
-    public ResponseEntity<?> modificarActuacion(@PathVariable Integer idActuacion,@PathVariable String descripcion, @PathVariable Boolean finalizado, @PathVariable LocalDate fecha, @PathVariable Integer idExpediente, @PathVariable String observaciones, @PathVariable String responsable) {
+    public ResponseEntity<?> modificarActuacion(@PathVariable Integer idActuacion,@PathVariable String descripcion, 
+                                                @PathVariable Boolean finalizado, @PathVariable LocalDate fecha, @PathVariable Integer idExpediente, 
+                                                @PathVariable String observaciones, @PathVariable String responsable) {
         try {
             Optional<ExpedientesModel> expediente = expedientesService.findById(idExpediente);
             Optional<ActuacionesModel> actuacion = actuacionesService.findById(idActuacion);
@@ -170,6 +175,7 @@ public class ActuacionesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar la actuación: " + e.getMessage());
         }
     }
+    
 
     /**
      * Método para obtener todas las actuaciones asociadas a un expediente específico.
