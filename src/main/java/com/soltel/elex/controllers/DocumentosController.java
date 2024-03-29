@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -126,9 +127,15 @@ public class DocumentosController {
         try {
             String rutaArchivo = fileDirectory + "/" + nombreArchivo + ".pdf";
             System.out.println(rutaArchivo);
-            Resource resource = new UrlResource(Paths.get(rutaArchivo).toUri());
-    
-            if (resource.exists() || resource.isReadable()) {
+            URI uri = Paths.get(rutaArchivo).toUri();
+            Resource resource = null;
+            if (uri != null) {
+                resource = new UrlResource(uri);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el URI para el archivo.");
+            }
+
+            if (resource != null && (resource.exists() || resource.isReadable())) {
                 return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=\"" + resource.getFilename() + "\"")                        
                 .body(resource);
@@ -156,12 +163,21 @@ public class DocumentosController {
                 DocumentosModel documento = documentoOptional.get();
                 byte[] archivo = documento.getArchivo();
 
-                ByteArrayResource resource = new ByteArrayResource(archivo);
+                if (archivo != null) {
+                    ByteArrayResource resource = new ByteArrayResource(archivo);
 
-                return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + documento.getNombre() + ".pdf\"")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(resource);
+                    MediaType mediaType = MediaType.APPLICATION_PDF;
+                    if (mediaType != null) {
+                        return ResponseEntity.ok()
+                        .header("Content-Disposition", "attachment; filename=\"" + documento.getNombre() + ".pdf\"")
+                        .contentType(mediaType)
+                        .body(resource);
+                    } else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: MediaType.APPLICATION_PDF es nulo.");
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El documento con ID " + idDocumento + " no tiene un archivo asociado.");
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se pudo encontrar el documento con ID " + idDocumento);
             }
