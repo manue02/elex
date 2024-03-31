@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Añadir tipo de expediente</h1>
+<section mat-dialog-content>
+	<mat-form-field>
+		<mat-label>Materia</mat-label>
+		<input matInput [(ngModel)]="data.materia" />
+	</mat-form-field>
+	<mat-form-field>
+		<mat-label>Acciones</mat-label>
+		<mat-select [(value)]="data.acciones">
+			<mat-option value="H">H</mat-option>
+			<mat-option value="P">P</mat-option>
+			<mat-option value="R">R</mat-option>
+		</mat-select>
+	</mat-form-field>
+</section>
+<section mat-dialog-actions>
+	<button mat-button (click)="onNoClick()">Cancelar</button>
+	<button mat-button [mat-dialog-close]="data" cdkFocusInitial>Aceptar</button>
+</section>

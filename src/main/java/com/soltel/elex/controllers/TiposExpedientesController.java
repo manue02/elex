@@ -103,8 +103,8 @@ public class TiposExpedientesController {
      * @param activo El nuevo estado activo del tipo de expediente.
      * @return Una respuesta con un mensaje de éxito o un mensaje de error si no se encuentra el tipo de expediente.
      */
-    @PutMapping("/modificar/{id}/{materia}/{acciones}/{activo}")
-    public ResponseEntity<?> putModificarTiposExpediente(@PathVariable Integer id,@PathVariable String materia, @PathVariable Acciones acciones, @PathVariable boolean activo) {
+    @PutMapping("/modificar/{id}/{materia}/{acciones}")
+    public ResponseEntity<?> putModificarTiposExpediente(@PathVariable Integer id,@PathVariable String materia, @PathVariable Acciones acciones) {
         try {
             materia = tiposExpedientesService.subStringMateria(materia);
     
@@ -114,8 +114,7 @@ public class TiposExpedientesController {
                 TiposExpedienteModel tipoExpediente = tipoExpedientePorMateriaAndActivo.get();
                 tipoExpediente.setMateria(materia);
                 tipoExpediente.setAcciones(acciones);
-                tiposExpedientesService.saveTipoExpediente(tipoExpediente);
-                return ResponseEntity.ok().body("Tipo expediente modificado");
+                return ResponseEntity.ok(tiposExpedientesService.saveTipoExpediente(tipoExpediente));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo expediente no encontrado");
             }
@@ -138,9 +137,18 @@ public class TiposExpedientesController {
     
             if (tipoExpedientePorMateriaAndActivo.isPresent()) {
                 TiposExpedienteModel tipoExpediente = tipoExpedientePorMateriaAndActivo.get();
-                tipoExpediente.setActivo(activo);
-                tiposExpedientesService.saveTipoExpediente(tipoExpediente);
-                return ResponseEntity.ok().body("Tipo de expediente activado/inactivado");
+
+                if (activo) {
+                    tipoExpediente.setActivo(false);
+                    TiposExpedienteModel tipoExpedienteGuardado = tiposExpedientesService.saveTipoExpediente(tipoExpediente);
+                    return ResponseEntity.ok(tipoExpedienteGuardado);
+
+                } else {
+                    tipoExpediente.setActivo(true);
+                    TiposExpedienteModel tipoExpedienteGuardado = tiposExpedientesService.saveTipoExpediente(tipoExpediente);
+                    return ResponseEntity.ok(tipoExpedienteGuardado);
+                }
+
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo expediente no encontrado");
             }
