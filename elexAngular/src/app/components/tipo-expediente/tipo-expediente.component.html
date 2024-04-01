@@ -12,6 +12,7 @@
 			<mat-select (valueChange)="applyFilter(materiaInput.value, activoSelect.value)" #activoSelect>
 				<mat-option value="true">Activo</mat-option>
 				<mat-option value="false">Inactivo</mat-option>
+				<mat-option value="">Todos</mat-option>
 			</mat-select>
 		</mat-form-field>
 
@@ -48,7 +49,7 @@
 			<ng-container matColumnDef="edit">
 				<th mat-header-cell *matHeaderCellDef>Editar</th>
 				<td mat-cell *matCellDef="let element">
-					<button mat-icon-button (click)="modalModificar(element.id)">
+					<button mat-icon-button (click)="modalModificar(element.id, element.materia, element.acciones)">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</td>

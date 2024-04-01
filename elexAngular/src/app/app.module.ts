@@ -19,9 +19,20 @@ import { TipoExpedienteModalComponent } from './formulario/tipo-expediente-modal
 import { FormsModule } from '@angular/forms'
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatSelectModule } from '@angular/material/select'
+import { ActuacionesComponent } from './components/actuaciones/actuaciones.component'
+import { ActuacionesModalComponent } from './formulario/actuaciones-modal/actuaciones-modal.component'
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { ReactiveFormsModule } from '@angular/forms'
 
 @NgModule({
-	declarations: [AppComponent, MenuComponent, TipoExpedienteComponent, TipoExpedienteModalComponent],
+	declarations: [
+		AppComponent,
+		MenuComponent,
+		TipoExpedienteComponent,
+		TipoExpedienteModalComponent,
+		ActuacionesComponent,
+		ActuacionesModalComponent,
+	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
@@ -36,6 +47,8 @@ import { MatSelectModule } from '@angular/material/select'
 		FormsModule,
 		MatDialogModule,
 		MatSelectModule,
+		MatAutocompleteModule,
+		ReactiveFormsModule,
 	],
 	providers: [provideHttpClient(withFetch()), provideClientHydration(), provideAnimationsAsync()],
 	bootstrap: [AppComponent],

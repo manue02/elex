@@ -165,9 +165,16 @@ public class ActuacionesController {
     
             if (actuacion.isPresent()) {
                 ActuacionesModel actuacionEncontrada = actuacion.get();
-                actuacionEncontrada.setFinalizado(finalizado);
-                actuacionesService.saveActuacion(actuacionEncontrada);
-                return ResponseEntity.ok().body("Actuacion eliminada");
+
+                if (finalizado){
+                    actuacionEncontrada.setFinalizado(false);
+                    ActuacionesModel actuacionGuardada = actuacionesService.saveActuacion(actuacionEncontrada);
+                    return ResponseEntity.ok(actuacionGuardada);
+                }else{
+                    actuacionEncontrada.setFinalizado(true);
+                    ActuacionesModel actuacionGuardada = actuacionesService.saveActuacion(actuacionEncontrada);
+                    return ResponseEntity.ok(actuacionGuardada);
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido eliminar la Actuacion revise los datos");
             }

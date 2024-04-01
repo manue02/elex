@@ -9,7 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 export class TipoExpedienteModalComponent {
 	constructor(
 		public dialogRef: MatDialogRef<TipoExpedienteModalComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { id: number; materia: string; acciones: string; activo: boolean },
+		@Inject(MAT_DIALOG_DATA) public data: { materia: string; acciones: string },
 	) {}
 
 	onNoClick(): void {

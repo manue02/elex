@@ -1,0 +1,10 @@
+:host {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+section[mat-dialog-content] > section {
+	display: flex;
+	flex-direction: column;
+}
