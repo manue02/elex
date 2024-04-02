@@ -5,6 +5,8 @@ import { ActuacionesService } from './../../service/actuaciones/actuaciones.serv
 import { FormControl } from '@angular/forms'
 import { Observable, of } from 'rxjs'
 import { map, startWith, debounceTime } from 'rxjs/operators'
+import { Expedientes } from '../../models/expedientes.model'
+import { ExpedienteService } from '../../service/expediente/expediente.service'
 
 @Component({
 	selector: 'app-actuaciones-modal',
@@ -14,37 +16,31 @@ import { map, startWith, debounceTime } from 'rxjs/operators'
 export class ActuacionesModalComponent implements OnInit {
 	myControl = new FormControl()
 	dataSource: Actuaciones[] = []
-	filteredOptions: Observable<Actuaciones[]>
+	filteredOptions: Observable<Expedientes[]>
+	dataExpediente: Expedientes[] = []
 
 	constructor(
 		public dialogRef: MatDialogRef<ActuacionesModalComponent>,
 		@Inject(MAT_DIALOG_DATA)
 		public data: { idExpediente: number; responsable: string; fecha: Date; descripcion: string; observaciones: string },
 		private actuacionesService: ActuacionesService,
+		private expedientesService: ExpedienteService,
 	) {
-		this.filteredOptions = of(this.dataSource)
+		this.filteredOptions = of(this.dataExpediente)
 	}
 	ngOnInit(): void {
 		this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
 			this.dataSource = actuaciones
 		})
 
+		this.expedientesService.getAllExpediente().subscribe((expedientes) => {
+			this.dataExpediente = expedientes
+		})
+
 		this.filteredOptions = this.myControl.valueChanges.pipe(
 			debounceTime(500),
 			startWith(''),
 			map((value) => this._filter(value)),
-			map((options: Actuaciones[]) =>
-				options.reduce((unique: Actuaciones[], o: Actuaciones) => {
-					if (
-						o &&
-						o.expediente &&
-						!unique.some((obj: Actuaciones) => obj && obj.expediente && obj.expediente.id === o.expediente.id)
-					) {
-						unique.push(o)
-					}
-					return unique
-				}, []),
-			),
 		)
 
 		this.myControl.valueChanges.subscribe((value) => {
@@ -56,9 +52,9 @@ export class ActuacionesModalComponent implements OnInit {
 		this.dialogRef.close()
 	}
 
-	private _filter(value: string): Actuaciones[] {
+	private _filter(value: string): Expedientes[] {
 		const filterValue = typeof value === 'string' ? value.toUpperCase() : value
 
-		return this.dataSource.filter((option) => option.expediente.codigo.toUpperCase().indexOf(filterValue) === 0)
+		return this.dataExpediente.filter((option) => option.codigo.toUpperCase().indexOf(filterValue) === 0)
 	}
 }

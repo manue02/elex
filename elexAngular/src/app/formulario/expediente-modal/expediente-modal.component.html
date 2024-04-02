@@ -1,35 +1,44 @@
-<h1 mat-dialog-title>Formulario Actuaciones</h1>
+<h1 mat-dialog-title>Formulario de Expediente</h1>
 <section mat-dialog-content>
 	<section>
 		<mat-form-field>
-			<mat-label>Expediente</mat-label>
+			<mat-label>Tipo Expediente</mat-label>
 			<input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" />
 			<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
 				<mat-option *ngFor="let option of filteredOptions | async" [value]="option.id">
-					{{ option.codigo }}
+					{{ option.materia }}
 				</mat-option>
 			</mat-autocomplete>
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-label>Responsable</mat-label>
-			<input matInput [(ngModel)]="data.responsable" />
+			<mat-label>Codigo</mat-label>
+			<input matInput [(ngModel)]="data.codigo" />
 		</mat-form-field>
 
 		<mat-form-field>
 			<mat-label>Fecha</mat-label>
 			<input matInput [(ngModel)]="data.fecha" type="date" />
 		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Estado</mat-label>
+			<mat-select [(value)]="data.estado">
+				<mat-option value="Pendiente">Pendiente</mat-option>
+				<mat-option value="Enviado">Enviado</mat-option>
+				<mat-option value="Erróneo">Erróneo</mat-option>
+			</mat-select>
+		</mat-form-field>
 	</section>
+
+	<mat-form-field>
+		<mat-label>Opciones</mat-label>
+		<textarea matInput [(ngModel)]="data.opciones"></textarea>
+	</mat-form-field>
 
 	<mat-form-field>
 		<mat-label>Descripcion</mat-label>
 		<textarea matInput [(ngModel)]="data.descripcion"></textarea>
-	</mat-form-field>
-
-	<mat-form-field>
-		<mat-label>Observaciones</mat-label>
-		<textarea matInput [(ngModel)]="data.observaciones"></textarea>
 	</mat-form-field>
 </section>
 <section mat-dialog-actions>

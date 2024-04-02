@@ -23,6 +23,11 @@ import { ActuacionesComponent } from './components/actuaciones/actuaciones.compo
 import { ActuacionesModalComponent } from './formulario/actuaciones-modal/actuaciones-modal.component'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { ReactiveFormsModule } from '@angular/forms'
+import { ExpedientesComponent } from './components/expedientes/expedientes.component'
+import { ExpedienteModalComponent } from './formulario/expediente-modal/expediente-modal.component'
+import { MatMenuModule } from '@angular/material/menu'
+import { PaginaNoEncontradaComponent } from './components/pagina-no-encontrada/pagina-no-encontrada.component'
+import { provideRouter } from '@angular/router'
 
 @NgModule({
 	declarations: [
@@ -32,6 +37,9 @@ import { ReactiveFormsModule } from '@angular/forms'
 		TipoExpedienteModalComponent,
 		ActuacionesComponent,
 		ActuacionesModalComponent,
+		ExpedientesComponent,
+		ExpedienteModalComponent,
+		PaginaNoEncontradaComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -49,6 +57,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 		MatSelectModule,
 		MatAutocompleteModule,
 		ReactiveFormsModule,
+		MatMenuModule,
 	],
 	providers: [provideHttpClient(withFetch()), provideClientHydration(), provideAnimationsAsync()],
 	bootstrap: [AppComponent],

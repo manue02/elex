@@ -135,8 +135,7 @@ public class ExpedientesController {
                 expediente.setOpciones(opciones.toLowerCase());
                 expediente.setDescripcion(tiposExpedientesService.subStringMateria(descripcion));
                 expediente.setTiposExpediente(tipoExpediente);
-                expedientesService.saveExpediente(expediente);
-                return ResponseEntity.ok().body("Expediente modificado");
+                return ResponseEntity.ok(expedientesService.saveExpediente(expediente));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Expediente no encontrado");
             }
