@@ -24,6 +24,7 @@ export class ExpedienteModalComponent implements OnInit {
 		public dialogRef: MatDialogRef<ExpedienteModalComponent>,
 		@Inject(MAT_DIALOG_DATA)
 		public data: {
+			id: Number
 			idTipoExpediente: Number
 			codigo: string
 			fecha: Date

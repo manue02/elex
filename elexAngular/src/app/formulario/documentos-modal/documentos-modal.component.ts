@@ -69,10 +69,14 @@ export class DocumentosModalComponent implements OnInit {
 	private _filter(value: string): Expedientes[] {
 		const filterValue = typeof value === 'string' ? value.toUpperCase() : ''
 
-		if (!filterValue) {
+		if (!filterValue || filterValue === '') {
 			return this.dataExpediente
 		}
 
 		return this.dataExpediente.filter((option) => option.codigo.toUpperCase().indexOf(filterValue) === 0)
+	}
+
+	logOption(option: any): void {
+		console.log(option)
 	}
 }

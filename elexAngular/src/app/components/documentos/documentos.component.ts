@@ -22,8 +22,6 @@ export class DocumentosComponent implements OnInit {
 		})
 	}
 
-	applyFilter(): void {}
-
 	modalInsertar(): void {
 		const dialogRef = this.dialog.open(DocumentosModalComponent, {
 			width: '23%',
@@ -81,17 +79,29 @@ export class DocumentosComponent implements OnInit {
 	}
 
 	deleteData(id: number, vigente: boolean): void {
-		Swal.showLoading() // Muestra el spinner
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: '¿Deseas eliminar o activar este documento?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.showLoading() // Muestra el spinner
 
-		this.documentosService.deleteDocumentos(id, vigente).subscribe((documento) => {
-			const index = this.dataSource.findIndex((documento) => documento.id === id)
+				this.documentosService.deleteDocumentos(id, vigente).subscribe((documento) => {
+					const index = this.dataSource.findIndex((doc) => doc.id === id)
 
-			if (index !== -1) {
-				this.dataSource[index] = documento
-				this.dataSource = [...this.dataSource]
+					if (index !== -1) {
+						this.dataSource[index] = documento
+						this.dataSource = [...this.dataSource]
 
-				Swal.hideLoading() // Oculta el spinner
-				Swal.fire('Eliminado!', 'El documento ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('Eliminado!', 'El documento ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+					}
+				})
 			}
 		})
 	}
@@ -108,5 +118,32 @@ export class DocumentosComponent implements OnInit {
 			const url = window.URL.createObjectURL(file)
 			window.open(url)
 		})
+	}
+
+	filtro: string = ''
+	filtrarPorNombre(): void {
+		if (this.filtro) {
+			this.dataSource = this.dataSource.filter((tipoExpediente) =>
+				tipoExpediente.nombre.toLowerCase().includes(this.filtro.toLowerCase()),
+			)
+		} else {
+			this.documentosService.getAllDocumentos().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+		}
+	}
+
+	estadoBool: string = ''
+
+	applyFilter(): void {
+		if (this.estadoBool === '') {
+			this.documentosService.getAllDocumentos().subscribe((expedientes) => {
+				this.dataSource = expedientes
+			})
+		} else if (this.estadoBool === 'true') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.vigente === true)
+			this.estadoBool = ''
+		} else if (this.estadoBool === 'false') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.vigente === false)
+			this.estadoBool = ''
+		}
 	}
 }

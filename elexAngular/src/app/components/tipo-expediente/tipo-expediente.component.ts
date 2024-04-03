@@ -66,12 +66,12 @@ export class TipoExpedienteComponent implements OnInit {
 	deleteData(id: number, activo: boolean) {
 		Swal.fire({
 			title: '¿Estás seguro?',
-			text: 'No podrás revertir esto!',
+			text: '¿Deseas eliminar o activar este Tipo de expediente?',
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
-			confirmButtonText: 'Sí, bórralo!',
+			confirmButtonText: 'Sí',
 		}).then((result) => {
 			if (result.isConfirmed) {
 				Swal.showLoading() // Muestra el spinner
@@ -129,16 +129,36 @@ export class TipoExpedienteComponent implements OnInit {
 	//	Metodo que se le pasa por parametro la materia y el activo para filtrar los tipos de expediente
 	//	Aun en construccion
 
-	applyFilter(materia: string, activo: string) {
-		if (activo === 'true') {
-			// Filtrar para mostrar solo los elementos activos
-			this.itemsFiltrados = this.dataSource.filter((item) => item.activo === true)
-		} else if (activo === 'false') {
-			// Filtrar para mostrar solo los elementos inactivos
-			this.itemsFiltrados = this.dataSource.filter((item) => item.activo === false)
-		} else {
-			// Mostrar todos los elementos
-			this.itemsFiltrados = this.dataSource
+	estadoBool: string = ''
+
+	applyFilter(): void {
+		if (this.estadoBool === '') {
+			this.tipoExpedienteService.getAllTipoExpediente().subscribe((expedientes) => {
+				this.dataSource = expedientes
+			})
+		} else if (this.estadoBool === 'true') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.activo === true)
+			this.estadoBool = ''
+		} else if (this.estadoBool === 'false') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.activo === false)
+			this.estadoBool = ''
 		}
+	}
+
+	dataSourceFiltrada: TiposExpediente[] = []
+	filtro: string = ''
+	filtrarPorNombre(): void {
+		this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
+			this.dataSourceFiltrada = tiposExpediente
+			if (this.filtro) {
+				this.dataSource = this.dataSource.filter((tipoExpediente) =>
+					tipoExpediente.materia.toLowerCase().includes(this.filtro.toLowerCase()),
+				)
+			} else {
+				this.tipoExpedienteService
+					.getAllTipoExpediente()
+					.subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+			}
+		})
 	}
 }

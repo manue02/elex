@@ -42,6 +42,7 @@ export class ExpedienteService {
 	}
 
 	putModificarExpediente(
+		id: number,
 		idTipoExpediente: number,
 		codigo: string,
 		fecha: Date,
@@ -49,7 +50,8 @@ export class ExpedienteService {
 		opciones: string,
 		descripcion: string,
 	): Observable<Expedientes> {
-		const url = `${this.baseURL}/modificar/${idTipoExpediente}/${codigo}/${fecha}/${estado}/${opciones}/${descripcion}`
+		const url = `${this.baseURL}/modificar/${id}/${idTipoExpediente}/${codigo}/${fecha}/${estado}/${opciones}/${descripcion}`
+		console.log(url)
 		return this.http.put<Expedientes>(url, {}).pipe(
 			catchError((error) => {
 				console.error('Ocurrió un error al modificar el Expediente', error)

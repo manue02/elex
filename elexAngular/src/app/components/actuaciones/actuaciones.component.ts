@@ -104,20 +104,56 @@ export class ActuacionesComponent implements OnInit {
 	}
 
 	deleteData(id: number, finalizado: boolean) {
-		Swal.showLoading() // Muestra el spinner
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: '¿Deseas eliminar o activar esta actuación?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.showLoading() // Muestra el spinner
 
-		this.actuacionesService.deleteActuacion(id, finalizado).subscribe((actuacion) => {
-			const index = this.dataSource.findIndex((index) => index.id === actuacion.id)
+				this.actuacionesService.deleteActuacion(id, finalizado).subscribe((actuacion) => {
+					const index = this.dataSource.findIndex((index) => index.id === actuacion.id)
 
-			if (index !== -1) {
-				this.dataSource[index] = actuacion
-				this.dataSource = [...this.dataSource]
+					if (index !== -1) {
+						this.dataSource[index] = actuacion
+						this.dataSource = [...this.dataSource]
 
-				Swal.hideLoading() // Oculta el spinner
-				Swal.fire('Eliminado!', 'La actuación ha sido eliminada.', 'success') // Muestra un mensaje de éxito
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('Eliminado!', 'La actuación ha sido eliminada.', 'success') // Muestra un mensaje de éxito
+					}
+				})
 			}
 		})
 	}
 
-	applyFilter(): void {}
+	estadoBool: string = ''
+
+	applyFilter(): void {
+		if (this.estadoBool === '') {
+			this.actuacionesService.getAllActuaciones().subscribe((expedientes) => {
+				this.dataSource = expedientes
+			})
+		} else if (this.estadoBool === 'true') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.finalizado === true)
+			this.estadoBool = ''
+		} else if (this.estadoBool === 'false') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.finalizado === false)
+			this.estadoBool = ''
+		}
+	}
+	filtro: string = ''
+	filtrarPorNombre(): void {
+		if (this.filtro) {
+			this.dataSource = this.dataSource.filter((tipoExpediente) =>
+				tipoExpediente.responsable.toLowerCase().includes(this.filtro.toLowerCase()),
+			)
+		} else {
+			this.actuacionesService.getAllActuaciones().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+		}
+	}
 }

@@ -32,7 +32,6 @@ export class ExpedientesComponent implements OnInit {
 		})
 	}
 
-	applyFilter(): void {}
 	modalInsertar(): void {
 		const dialogRef = this.dialog.open(ExpedienteModalComponent, {
 			width: '23%',
@@ -67,10 +66,10 @@ export class ExpedientesComponent implements OnInit {
 			}
 		})
 	}
-	modalModificar(id: String): void {
+	modalModificar(id: number): void {
 		const dialogRef = this.dialog.open(ExpedienteModalComponent, {
 			width: '23%',
-			data: this.dataSource.find((expediente) => expediente.codigo === id),
+			data: this.dataSource.find((expediente) => expediente.id === id),
 		})
 
 		dialogRef.afterClosed().subscribe((result) => {
@@ -78,6 +77,7 @@ export class ExpedientesComponent implements OnInit {
 				Swal.showLoading() // Muestra el spinner
 
 				this.ExpedienteService.putModificarExpediente(
+					result.id,
 					result.idTipoExpediente,
 					result.codigo,
 					result.fecha,
@@ -85,7 +85,7 @@ export class ExpedientesComponent implements OnInit {
 					result.opciones,
 					result.descripcion,
 				).subscribe((expediente) => {
-					const index = this.dataSource.findIndex((expediente) => expediente.codigo === id)
+					const index = this.dataSource.findIndex((expediente) => expediente.id === id)
 					this.dataSource[index] = expediente
 					this.dataSource = [...this.dataSource]
 
@@ -94,5 +94,35 @@ export class ExpedientesComponent implements OnInit {
 				})
 			}
 		})
+	}
+
+	filtro: string = ''
+	filtrarPorNombre(): void {
+		if (this.filtro) {
+			this.dataSource = this.dataSource.filter((tipoExpediente) =>
+				tipoExpediente.codigo.toLowerCase().includes(this.filtro.toLowerCase()),
+			)
+		} else {
+			this.ExpedienteService.getAllExpediente().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+		}
+	}
+
+	estadoBool: string = ''
+
+	applyFilter(): void {
+		if (this.estadoBool === '') {
+			this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+				this.dataSource = expedientes
+			})
+		} else if (this.estadoBool === 'Pendiente') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Pendiente')
+			this.estadoBool = ''
+		} else if (this.estadoBool === 'Enviado') {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Enviado')
+			this.estadoBool = ''
+		} else {
+			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Erróneo')
+			this.estadoBool = ''
+		}
 	}
 }

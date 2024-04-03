@@ -119,11 +119,11 @@ public class ExpedientesController {
      * @param descripcion la nueva descripción del expediente
      * @return un mensaje indicando si la modificación fue exitosa o no
      */
-    @PutMapping("modificar/{idTipoExpediente}/{codigo}/{fecha}/{estado}/{opciones}/{descripcion}")
-    public ResponseEntity<?> putModificarExpediente(@PathVariable Integer idTipoExpediente, @PathVariable String codigo, @PathVariable LocalDate fecha, @PathVariable Estado estado,
+    @PutMapping("modificar/{id}/{idTipoExpediente}/{codigo}/{fecha}/{estado}/{opciones}/{descripcion}")
+    public ResponseEntity<?> putModificarExpediente(@PathVariable Integer id,@PathVariable Integer idTipoExpediente, @PathVariable String codigo, @PathVariable LocalDate fecha, @PathVariable Estado estado,
                                                     @PathVariable String opciones, @PathVariable String descripcion) {
         try {
-            Optional<ExpedientesModel> expedientePorCodigo = expedientesService.findByCodigo(codigo);
+            Optional<ExpedientesModel> expedientePorCodigo = expedientesService.findById(id);
             Optional<TiposExpedienteModel> tipoExpedienteBusqueda = tiposExpedientesService.findById(idTipoExpediente);
     
             if (expedientePorCodigo.isPresent() && tipoExpedienteBusqueda.isPresent()) {
