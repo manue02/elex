@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Formulario Actuaciones</h1>
+<h1 mat-dialog-title>Formulario Documentos</h1>
 <section mat-dialog-content>
 	<section>
 		<mat-form-field>
@@ -18,25 +18,24 @@
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-label>Responsable</mat-label>
-			<input matInput [(ngModel)]="data.responsable" />
+			<mat-label>Tasa</mat-label>
+			<input type="number" matInput [(ngModel)]="data.tasa" />
 		</mat-form-field>
 
 		<mat-form-field>
-			<mat-label>Fecha</mat-label>
-			<input matInput [(ngModel)]="data.fecha" type="date" />
+			<mat-label>Nombre</mat-label>
+			<input matInput [(ngModel)]="data.nombre" />
 		</mat-form-field>
+
+		<mat-form-field>
+			<mat-label>Tipo</mat-label>
+			<input matInput [(ngModel)]="data.tipo" />
+		</mat-form-field>
+
+		<label class="bonito" for="file-upload">Archivo</label>
+		<input id="file-upload" type="file" (change)="onFileSelected($event)" [disabled]="data.tipo" />
+		<p *ngIf="data?.tipo">El botón está deshabilitado</p>
 	</section>
-
-	<mat-form-field>
-		<mat-label>Descripcion</mat-label>
-		<textarea matInput [(ngModel)]="data.descripcion"></textarea>
-	</mat-form-field>
-
-	<mat-form-field>
-		<mat-label>Observaciones</mat-label>
-		<textarea matInput [(ngModel)]="data.observaciones"></textarea>
-	</mat-form-field>
 </section>
 <section mat-dialog-actions>
 	<button mat-button (click)="onNoClick()">Cancelar</button>

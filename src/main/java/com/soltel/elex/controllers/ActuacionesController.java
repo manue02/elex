@@ -141,8 +141,7 @@ public class ActuacionesController {
                 actuacionEncontrada.setObservaciones(tiposExpedientesService.subStringMateria(observaciones));
                 actuacionEncontrada.setResponsable(responsableFormato);
                 actuacionEncontrada.setExpediente(expedienteEncontrado);
-                actuacionesService.saveActuacion(actuacionEncontrada);
-                return ResponseEntity.ok().body("Expediente modificado");
+                return ResponseEntity.ok(actuacionesService.saveActuacion(actuacionEncontrada));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido insertar una nueva Actuacion revise los datos");
             }

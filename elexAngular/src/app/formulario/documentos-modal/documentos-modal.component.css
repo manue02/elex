@@ -1,0 +1,16 @@
+input[type='file'] {
+	display: none;
+}
+
+.bonito {
+	cursor: pointer;
+	padding: 10px;
+	background-color: #4caf50;
+	color: white;
+	border-radius: 5px;
+}
+
+.bonito:disabled {
+	background-color: grey;
+	cursor: not-allowed;
+}

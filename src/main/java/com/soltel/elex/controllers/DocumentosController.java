@@ -197,8 +197,8 @@ public class DocumentosController {
      * @param expediente El expediente al que pertenece el documento.
      * @return Una respuesta HTTP con el documento modificado o un mensaje de error.
      */
-    @PutMapping("/modificar/{id}/{tasa}/{vigente}/{nombre}/{tipo}/{expediente}")
-    public ResponseEntity<?> modificarDocumento(@PathVariable Integer id, @PathVariable Float tasa, @PathVariable Boolean vigente, @PathVariable String nombre, @PathVariable String tipo, @PathVariable Integer expediente) {
+    @PutMapping("/modificar/{id}/{tasa}/{nombre}/{tipo}/{expediente}")
+    public ResponseEntity<?> modificarDocumento(@PathVariable Integer id, @PathVariable Float tasa, @PathVariable String nombre, @PathVariable String tipo, @PathVariable Integer expediente) {
         try {
             Optional<ExpedientesModel> expedienteEncontrado = expedientesService.findById(expediente);
             Optional<DocumentosModel> documento = documentosService.findById(id);
@@ -207,7 +207,6 @@ public class DocumentosController {
                 ExpedientesModel todoExpediente = expedienteEncontrado.get();
                 DocumentosModel documentoEncontrado = documento.get();
                 documentoEncontrado.setTasa(tasa);
-                documentoEncontrado.setVigente(vigente);
                 documentoEncontrado.setNombre(tiposExpedientesService.subStringMateria(nombre));
                 documentoEncontrado.setTipo(tipo);
                 documentoEncontrado.setExpediente(todoExpediente);
@@ -233,9 +232,16 @@ public class DocumentosController {
             Optional<DocumentosModel> documento = documentosService.findById(id);
             if (documento.isPresent()) {
                 DocumentosModel documentoEncontrado = documento.get();
-                documentoEncontrado.setVigente(vigente);
-                documentosService.saveDocumento(documentoEncontrado);
-                return ResponseEntity.ok("Documento eliminado");
+
+                if (vigente) {
+                documentoEncontrado.setVigente(false);
+                return ResponseEntity.ok(documentosService.saveDocumento(documentoEncontrado));
+             
+                }else{
+                documentoEncontrado.setVigente(true);
+                return ResponseEntity.ok(documentosService.saveDocumento(documentoEncontrado));
+                }
+
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido eliminar el documento revise los datos");
             }

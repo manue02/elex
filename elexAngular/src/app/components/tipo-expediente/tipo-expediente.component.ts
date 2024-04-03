@@ -3,6 +3,7 @@ import { TipoExpedienteService } from './../../service/tipoExpediente/tipo-exped
 import { Component, OnInit } from '@angular/core'
 import { TipoExpedienteModalComponent } from '../../formulario/tipo-expediente-modal/tipo-expediente-modal.component'
 import { MatDialog } from '@angular/material/dialog'
+import Swal from 'sweetalert2'
 
 @Component({
 	selector: 'app-tipo-expediente',
@@ -12,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog'
 export class TipoExpedienteComponent implements OnInit {
 	dataSource: TiposExpediente[] = []
 	displayedColumns: string[] = ['id', 'materia', 'acciones', 'activo', 'edit', 'delete']
+	itemsFiltrados = this.dataSource
 
 	constructor(private tipoExpedienteService: TipoExpedienteService, private dialog: MatDialog) {}
 
@@ -39,11 +41,16 @@ export class TipoExpedienteComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
+				Swal.showLoading() // Muestra el spinner
+
 				this.tipoExpedienteService
 					.postInsertTipoExpediente(result.materia, result.acciones, result.activo)
 					.subscribe((tipoExpediente) => {
 						this.dataSource.push(tipoExpediente)
 						this.dataSource = [...this.dataSource]
+
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
 					})
 			}
 		})
@@ -57,12 +64,29 @@ export class TipoExpedienteComponent implements OnInit {
 	//  para que sea activo o inactivo y se recarga la pagina
 
 	deleteData(id: number, activo: boolean) {
-		this.tipoExpedienteService.deleteTipoExpediente(id, activo).subscribe((tipoExpediente) => {
-			const index = this.dataSource.findIndex((tipo) => tipo.id === tipoExpediente.id)
-			
-			if (index !== -1) {
-				this.dataSource[index] = tipoExpediente
-				this.dataSource = [...this.dataSource]
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: 'No podrás revertir esto!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí, bórralo!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.showLoading() // Muestra el spinner
+
+				this.tipoExpedienteService.deleteTipoExpediente(id, activo).subscribe((tipoExpediente) => {
+					const index = this.dataSource.findIndex((tipo) => tipo.id === tipoExpediente.id)
+
+					if (index !== -1) {
+						this.dataSource[index] = tipoExpediente
+						this.dataSource = [...this.dataSource]
+					}
+
+					Swal.hideLoading() // Oculta el spinner
+					Swal.fire('Eliminado!', 'El expediente ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+				})
 			}
 		})
 	}
@@ -84,6 +108,8 @@ export class TipoExpedienteComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
+				Swal.showLoading() // Muestra el spinner
+
 				this.tipoExpedienteService
 					.editTipoExpediente(requestId, result.materia, result.acciones)
 					.subscribe((tipoExpediente) => {
@@ -92,6 +118,9 @@ export class TipoExpedienteComponent implements OnInit {
 							this.dataSource[index] = tipoExpediente
 						}
 						this.dataSource = [...this.dataSource]
+
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
 					})
 			}
 		})
@@ -100,18 +129,16 @@ export class TipoExpedienteComponent implements OnInit {
 	//	Metodo que se le pasa por parametro la materia y el activo para filtrar los tipos de expediente
 	//	Aun en construccion
 
-	applyFilter(materiaFiltro: string, activoFiltro: string) {
-		// Convertir la primera letra a mayúscula y el resto a minúsculas
-		materiaFiltro = materiaFiltro ? materiaFiltro.charAt(0).toUpperCase() + materiaFiltro.slice(1).toLowerCase() : ''
-
-		let datosFiltrados = this.dataSource.filter((tipo) => {
-			let filtroMateria = materiaFiltro !== '' ? tipo.materia.includes(materiaFiltro) : true
-			let filtroActivo =
-				activoFiltro !== undefined && activoFiltro !== '' ? tipo.activo.toString() === activoFiltro : true
-			return filtroMateria && filtroActivo
-		})
-
-		// Si materiaFiltro está vacío, mostrar todos los datos
-		this.dataSource = materiaFiltro !== '' ? datosFiltrados : this.dataSource
+	applyFilter(materia: string, activo: string) {
+		if (activo === 'true') {
+			// Filtrar para mostrar solo los elementos activos
+			this.itemsFiltrados = this.dataSource.filter((item) => item.activo === true)
+		} else if (activo === 'false') {
+			// Filtrar para mostrar solo los elementos inactivos
+			this.itemsFiltrados = this.dataSource.filter((item) => item.activo === false)
+		} else {
+			// Mostrar todos los elementos
+			this.itemsFiltrados = this.dataSource
+		}
 	}
 }

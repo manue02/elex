@@ -62,7 +62,12 @@ export class ExpedienteModalComponent implements OnInit {
 	}
 
 	private _filter(value: string): TiposExpediente[] {
-		const filterValue = typeof value === 'string' ? value.toUpperCase() : value
-		return this.dataTipoExpediente.filter((option) => option.materia.toUpperCase().includes(filterValue))
+		const filterValue = typeof value === 'string' ? value.toUpperCase() : ''
+
+		if (!filterValue) {
+			return this.dataTipoExpediente
+		}
+
+		return this.dataTipoExpediente.filter((option) => option.materia.toUpperCase().indexOf(filterValue) === 0)
 	}
 }

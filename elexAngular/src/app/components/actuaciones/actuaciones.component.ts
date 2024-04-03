@@ -3,6 +3,7 @@ import { Actuaciones } from '../../models/actuaciones.model'
 import { ActuacionesService } from './../../service/actuaciones/actuaciones.service'
 import { MatDialog } from '@angular/material/dialog'
 import { ActuacionesModalComponent } from '../../formulario/actuaciones-modal/actuaciones-modal.component'
+import Swal from 'sweetalert2'
 
 @Component({
 	selector: 'app-actuaciones',
@@ -46,6 +47,8 @@ export class ActuacionesComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
+				Swal.showLoading() // Muestra el spinner
+
 				this.actuacionesService
 					.postInsertActuacion(
 						result.idExpediente,
@@ -58,6 +61,9 @@ export class ActuacionesComponent implements OnInit {
 					.subscribe((actuacion) => {
 						this.dataSource.push(actuacion)
 						this.dataSource = [...this.dataSource]
+
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('Insertado!', 'La actuación ha sido insertada.', 'success') // Muestra un mensaje de éxito
 					})
 			}
 		})
@@ -70,6 +76,8 @@ export class ActuacionesComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((result) => {
 			if (result) {
+				Swal.showLoading() // Muestra el spinner
+
 				this.actuacionesService
 					.putModificarActuacion(
 						result.id,
@@ -86,6 +94,9 @@ export class ActuacionesComponent implements OnInit {
 						if (index !== -1) {
 							this.dataSource[index] = actuacion
 							this.dataSource = [...this.dataSource]
+
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
 						}
 					})
 			}
@@ -93,12 +104,17 @@ export class ActuacionesComponent implements OnInit {
 	}
 
 	deleteData(id: number, finalizado: boolean) {
+		Swal.showLoading() // Muestra el spinner
+
 		this.actuacionesService.deleteActuacion(id, finalizado).subscribe((actuacion) => {
 			const index = this.dataSource.findIndex((index) => index.id === actuacion.id)
 
 			if (index !== -1) {
 				this.dataSource[index] = actuacion
 				this.dataSource = [...this.dataSource]
+
+				Swal.hideLoading() // Oculta el spinner
+				Swal.fire('Eliminado!', 'La actuación ha sido eliminada.', 'success') // Muestra un mensaje de éxito
 			}
 		})
 	}
