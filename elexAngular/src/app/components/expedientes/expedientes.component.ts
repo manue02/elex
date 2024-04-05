@@ -22,6 +22,7 @@ export class ExpedientesComponent implements OnInit {
 		'descripcion',
 		'idTipoExpediente',
 		'edit',
+		'detalles',
 	]
 
 	constructor(private ExpedienteService: ExpedienteService, private dialog: MatDialog) {}

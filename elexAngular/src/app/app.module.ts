@@ -28,7 +28,8 @@ import { ExpedienteModalComponent } from './formulario/expediente-modal/expedien
 import { MatMenuModule } from '@angular/material/menu'
 import { PaginaNoEncontradaComponent } from './components/pagina-no-encontrada/pagina-no-encontrada.component'
 import { DocumentosModalComponent } from './formulario/documentos-modal/documentos-modal.component'
-import { DocumentosComponent } from './components/documentos/documentos.component'
+import { DocumentosComponent } from './components/documentos/documentos.component';
+import { DetallesComponent } from './components/detalles/detalles.component'
 
 @NgModule({
 	declarations: [
@@ -43,6 +44,7 @@ import { DocumentosComponent } from './components/documentos/documentos.componen
 		PaginaNoEncontradaComponent,
 		DocumentosModalComponent,
 		DocumentosComponent,
+  DetallesComponent,
 	],
 	imports: [
 		BrowserModule,

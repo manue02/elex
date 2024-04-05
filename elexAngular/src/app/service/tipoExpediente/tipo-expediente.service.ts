@@ -51,4 +51,15 @@ export class TipoExpedienteService {
 			}),
 		)
 	}
+
+	porId(id: number): Observable<TiposExpediente[]> {
+		const url = `${this.baseURL}/codigo/${id}`
+		console.log(url)
+		return this.http.get<TiposExpediente[]>(url, {}).pipe(
+			catchError((error) => {
+				console.error('Ocurrió un error al obtener el TipoExpediente por id', error)
+				throw error
+			}),
+		)
+	}
 }

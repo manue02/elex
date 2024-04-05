@@ -1,0 +1,19 @@
+section > mat-card > mat-card-content > section > p {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #ffffff;
+	margin-bottom: 2%;
+	margin-top: 1%;
+}
+
+h1 {
+	color: #4d5e91;
+	letter-spacing: -3px;
+	font-size: 80px;
+	font-weight: 200;
+	margin-bottom: 0;
+	text-align: center;
+	margin: 1em 0.5em 1.5em -0.5em;
+	letter-spacing: -3px;
+	flex-wrap: wrap;
+}

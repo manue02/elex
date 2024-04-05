@@ -50,6 +50,21 @@ public class TiposExpedientesController {
         }
     }
 
+    @GetMapping("/codigo/{id}")
+    public ResponseEntity<?> getTipoExpedientePorId(@PathVariable Integer id) {
+        try {
+            Optional<TiposExpedienteModel> tipoExpedientePorId = tiposExpedientesService.findById(id);
+    
+            if (tipoExpedientePorId.isPresent()) {
+                return ResponseEntity.ok(tipoExpedientePorId);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el tipo de expediente con el ID " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener el tipo de expediente por ID: " + e.getMessage());
+        }
+    }
+
     /**
      * Maneja la solicitud GET para obtener un tipo de expediente por materia y estado activo.
      *
