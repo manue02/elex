@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog'
 import Swal from 'sweetalert2'
 import { LoginService } from './../../service/login/login.service'
 import { Router } from '@angular/router'
+import { catchError } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-tipo-expediente',
@@ -58,12 +60,21 @@ export class TipoExpedienteComponent implements OnInit {
 
 				this.tipoExpedienteService
 					.postInsertTipoExpediente(result.materia, result.acciones, result.activo)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al insertar el expediente.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
 					.subscribe((tipoExpediente) => {
-						this.dataSource.push(tipoExpediente)
-						this.dataSource = [...this.dataSource]
+						if (tipoExpediente) {
+							this.dataSource.push(tipoExpediente)
+							this.dataSource = [...this.dataSource]
 
-						Swal.hideLoading() // Oculta el spinner
-						Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
+						}
 					})
 			}
 		})
@@ -125,15 +136,25 @@ export class TipoExpedienteComponent implements OnInit {
 
 				this.tipoExpedienteService
 					.editTipoExpediente(requestId, result.materia, result.acciones)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al modificar el expediente.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
 					.subscribe((tipoExpediente) => {
-						const index = this.dataSource.findIndex((tipo) => tipo.id === tipoExpediente.id)
-						if (index !== -1) {
-							this.dataSource[index] = tipoExpediente
-						}
-						this.dataSource = [...this.dataSource]
+						if (tipoExpediente) {
+							const index = this.dataSource.findIndex((tipo) => tipo.id === tipoExpediente.id)
 
-						Swal.hideLoading() // Oculta el spinner
-						Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+							if (index !== -1) {
+								this.dataSource[index] = tipoExpediente
+							}
+							this.dataSource = [...this.dataSource]
+
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+						}
 					})
 			}
 		})

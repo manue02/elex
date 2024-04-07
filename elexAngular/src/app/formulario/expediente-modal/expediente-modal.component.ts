@@ -71,4 +71,37 @@ export class ExpedienteModalComponent implements OnInit {
 
 		return this.dataTipoExpediente.filter((option) => option.materia.toUpperCase().indexOf(filterValue) === 0)
 	}
+
+	validarFormulario(): void {
+		const idTipoExpediente = this.data.idTipoExpediente
+		const codigo = this.data.codigo
+		const fecha = this.data.fecha
+		const estado = this.data.estado
+		const opciones = this.data.opciones
+		const descripcion = this.data.descripcion
+
+		if (idTipoExpediente === 0 || idTipoExpediente === null || idTipoExpediente === undefined) {
+			alert('El campo tipo de expediente no puede estar vacío')
+		}
+
+		if (codigo === '') {
+			alert('El campo código no puede estar vacío')
+		}
+
+		if (!fecha) {
+			alert('El campo fecha no puede estar vacío')
+		}
+
+		if (estado === null || estado === undefined) {
+			alert('El campo estado no puede estar vacío')
+		}
+
+		if (opciones === '') {
+			alert('El campo opciones no puede estar vacío')
+		}
+
+		if (descripcion === '') {
+			alert('El campo descripción no puede estar vacío')
+		}
+	}
 }

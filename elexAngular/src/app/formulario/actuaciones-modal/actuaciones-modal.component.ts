@@ -1,3 +1,4 @@
+import { Expedientes } from './../../models/expedientes.model'
 import { Component, Inject, OnInit } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { Actuaciones } from '../../models/actuaciones.model'
@@ -5,7 +6,6 @@ import { ActuacionesService } from './../../service/actuaciones/actuaciones.serv
 import { FormControl } from '@angular/forms'
 import { Observable, of } from 'rxjs'
 import { map, startWith, debounceTime } from 'rxjs/operators'
-import { Expedientes } from '../../models/expedientes.model'
 import { ExpedienteService } from '../../service/expediente/expediente.service'
 
 @Component({
@@ -22,7 +22,13 @@ export class ActuacionesModalComponent implements OnInit {
 	constructor(
 		public dialogRef: MatDialogRef<ActuacionesModalComponent>,
 		@Inject(MAT_DIALOG_DATA)
-		public data: { idExpediente: number; responsable: string; fecha: Date; descripcion: string; observaciones: string },
+		public data: {
+			idExpediente: number
+			responsable: string
+			fecha: Date
+			descripcion: string
+			observaciones: string
+		},
 		private actuacionesService: ActuacionesService,
 		private expedientesService: ExpedienteService,
 	) {
@@ -60,5 +66,33 @@ export class ActuacionesModalComponent implements OnInit {
 		}
 
 		return this.dataExpediente.filter((option) => option.codigo.toUpperCase().indexOf(filterValue) === 0)
+	}
+
+	validarFormulario(): void {
+		const partes = this.data.responsable.trim().split(' ')
+		const Expediente = this.data.idExpediente
+		const fecha = this.data.fecha
+		const descripcion = this.data.descripcion.trim()
+		const observaciones = this.data.observaciones.trim()
+
+		if (partes.length < 3) {
+			window.alert('El campo Responsable debe contener un nombre y dos apellidos')
+		}
+
+		if (Expediente === 0 || Expediente === null || Expediente === undefined) {
+			window.alert('El campo Expediente es obligatorio')
+		}
+
+		if (fecha === null || fecha === undefined) {
+			window.alert('El campo Fecha es obligatorio')
+		}
+
+		if (descripcion === '') {
+			window.alert('El campo Descripción es obligatorio')
+		}
+
+		if (observaciones === '') {
+			window.alert('El campo Observaciones es obligatorio')
+		}
 	}
 }

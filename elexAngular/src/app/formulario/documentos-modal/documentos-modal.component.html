@@ -34,10 +34,13 @@
 
 		<label class="bonito" for="file-upload">Subir Archivo</label>
 		<input id="file-upload" type="file" (change)="onFileSelected($event)" [disabled]="data.tipo" />
-		<p *ngIf="data?.tipo">boton Subir Archivo desabilitado no se contempla editar el archivo asociado a un documento</p>
+		<p *ngIf="data?.tipo">
+			¡Advertencia! No se contempla que se pueda editar el archivo, el boton Subir Archivo esta desabilitado en la
+			edicion
+		</p>
 	</section>
 </section>
 <section mat-dialog-actions>
 	<button mat-button (click)="onNoClick()">Cancelar</button>
-	<button mat-button [mat-dialog-close]="data" cdkFocusInitial>Aceptar</button>
+	<button mat-button [mat-dialog-close]="data" cdkFocusInitial (click)="validarFormulario()">Aceptar</button>
 </section>

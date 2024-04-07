@@ -7,6 +7,8 @@ import { Estado } from '../../models/estado.enum'
 import Swal from 'sweetalert2'
 import { LoginService } from './../../service/login/login.service'
 import { Router } from '@angular/router'
+import { catchError } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-expedientes',
@@ -69,13 +71,23 @@ export class ExpedientesComponent implements OnInit {
 					result.estado,
 					result.opciones,
 					result.descripcion,
-				).subscribe((expediente) => {
-					this.dataSource.push(expediente)
-					this.dataSource = [...this.dataSource]
+				)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al insertar el expediente.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
+					.subscribe((expediente) => {
+						if (expediente) {
+							this.dataSource.push(expediente)
+							this.dataSource = [...this.dataSource]
 
-					Swal.hideLoading() // Oculta el spinner
-					Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
-				})
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
+						}
+					})
 			}
 		})
 	}
@@ -97,14 +109,24 @@ export class ExpedientesComponent implements OnInit {
 					result.estado,
 					result.opciones,
 					result.descripcion,
-				).subscribe((expediente) => {
-					const index = this.dataSource.findIndex((expediente) => expediente.id === id)
-					this.dataSource[index] = expediente
-					this.dataSource = [...this.dataSource]
+				)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al modificar el expediente.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
+					.subscribe((expediente) => {
+						if (expediente) {
+							const index = this.dataSource.findIndex((expediente) => expediente.id === id)
+							this.dataSource[index] = expediente
+							this.dataSource = [...this.dataSource]
 
-					Swal.hideLoading() // Oculta el spinner
-					Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
-				})
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+						}
+					})
 			}
 		})
 	}

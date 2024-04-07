@@ -79,4 +79,27 @@ export class DocumentosModalComponent implements OnInit {
 	logOption(option: any): void {
 		console.log(option)
 	}
+
+	validarFormulario(): void {
+		const idExpediente = this.myControl.value
+		const tasa = this.data.tasa
+		const nombre = this.data.nombre.trim()
+		const tipo = this.data.tipo.trim()
+
+		if (idExpediente === 0 || idExpediente === null || idExpediente === undefined) {
+			window.alert('El campo Expediente es obligatorio')
+		}
+
+		if (tasa === 0 || tasa === null || tasa === undefined) {
+			window.alert('El campo Tasa es obligatorio')
+		}
+
+		if (nombre === '') {
+			window.alert('El campo Nombre es obligatorio')
+		}
+
+		if (tipo === '') {
+			window.alert('El campo Tipo es obligatorio')
+		}
+	}
 }

@@ -6,6 +6,8 @@ import { ActuacionesModalComponent } from '../../formulario/actuaciones-modal/ac
 import Swal from 'sweetalert2'
 import { LoginService } from './../../service/login/login.service'
 import { Router } from '@angular/router'
+import { catchError } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-actuaciones',
@@ -71,12 +73,21 @@ export class ActuacionesComponent implements OnInit {
 						result.observaciones,
 						result.finalizado,
 					)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al insertar la actuación.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
 					.subscribe((actuacion) => {
-						this.dataSource.push(actuacion)
-						this.dataSource = [...this.dataSource]
+						if (actuacion) {
+							this.dataSource.push(actuacion)
+							this.dataSource = [...this.dataSource]
 
-						Swal.hideLoading() // Oculta el spinner
-						Swal.fire('Insertado!', 'La actuación ha sido insertada.', 'success') // Muestra un mensaje de éxito
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Insertado!', 'La actuación ha sido insertada.', 'success') // Muestra un mensaje de éxito
+						}
 					})
 			}
 		})
@@ -101,15 +112,24 @@ export class ActuacionesComponent implements OnInit {
 						result.observaciones,
 						result.finalizado,
 					)
-					.subscribe((actuacion) => {
-						const index = this.dataSource.findIndex((index) => index.id === actuacion.id)
-
-						if (index !== -1) {
-							this.dataSource[index] = actuacion
-							this.dataSource = [...this.dataSource]
-
+					.pipe(
+						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
-							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+							Swal.fire('Error!', 'Ha ocurrido un error al modificar la actuación.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
+					.subscribe((actuacion) => {
+						if (actuacion) {
+							const index = this.dataSource.findIndex((index) => index.id === actuacion.id)
+
+							if (index !== -1) {
+								this.dataSource[index] = actuacion
+								this.dataSource = [...this.dataSource]
+
+								Swal.hideLoading() // Oculta el spinner
+								Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+							}
 						}
 					})
 			}

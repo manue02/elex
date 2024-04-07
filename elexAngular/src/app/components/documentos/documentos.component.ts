@@ -6,6 +6,8 @@ import { DocumentosModalComponent } from '../../formulario/documentos-modal/docu
 import Swal from 'sweetalert2'
 import { LoginService } from './../../service/login/login.service'
 import { Router } from '@angular/router'
+import { catchError } from 'rxjs/operators'
+import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-documentos',
@@ -53,12 +55,21 @@ export class DocumentosComponent implements OnInit {
 
 				this.documentosService
 					.postInsertDocumentos(result.file, result.tasa, result.vigente, result.nombre, result.tipo, result.expediente)
+					.pipe(
+						catchError((error) => {
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Error!', 'Ha ocurrido un error al insertar el documento.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
 					.subscribe((documento) => {
-						this.dataSource.push(documento)
-						this.dataSource = [...this.dataSource]
+						if (documento) {
+							this.dataSource.push(documento)
+							this.dataSource = [...this.dataSource]
 
-						Swal.hideLoading() // Oculta el spinner
-						Swal.fire('Insertado!', 'El documento ha sido insertado.', 'success') // Muestra un mensaje de éxito
+							Swal.hideLoading() // Oculta el spinner
+							Swal.fire('Insertado!', 'El documento ha sido insertado.', 'success') // Muestra un mensaje de éxito
+						}
 					})
 			}
 		})
@@ -76,15 +87,24 @@ export class DocumentosComponent implements OnInit {
 
 				this.documentosService
 					.putModificarDocumentos(result.id, result.tasa, result.nombre, result.tipo, result.expediente)
-					.subscribe((documento) => {
-						const index = this.dataSource.findIndex((documento) => documento.id === id)
-
-						if (index !== -1) {
-							this.dataSource[index] = documento
-							this.dataSource = [...this.dataSource]
-
+					.pipe(
+						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
-							Swal.fire('Modificado!', 'El documento ha sido modificado.', 'success') // Muestra un mensaje de éxito
+							Swal.fire('Error!', 'Ha ocurrido un error al modificar el documento.', 'error') // Muestra un mensaje de error
+							return of(null)
+						}),
+					)
+					.subscribe((documento) => {
+						if (documento) {
+							const index = this.dataSource.findIndex((documento) => documento.id === id)
+
+							if (index !== -1) {
+								this.dataSource[index] = documento
+								this.dataSource = [...this.dataSource]
+
+								Swal.hideLoading() // Oculta el spinner
+								Swal.fire('Modificado!', 'El documento ha sido modificado.', 'success') // Muestra un mensaje de éxito
+							}
 						}
 					})
 			}

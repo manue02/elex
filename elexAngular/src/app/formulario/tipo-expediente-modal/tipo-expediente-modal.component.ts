@@ -15,4 +15,17 @@ export class TipoExpedienteModalComponent {
 	onNoClick(): void {
 		this.dialogRef.close()
 	}
+
+	validarFormulario(): void {
+		const materia = this.data.materia
+		const acciones = this.data.acciones
+
+		if (materia === '') {
+			alert('El campo materia no puede estar vacío')
+		}
+
+		if (acciones === '') {
+			alert('El campo acciones no puede estar vacío')
+		}
+	}
 }
