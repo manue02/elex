@@ -32,12 +32,10 @@
 			<input matInput [(ngModel)]="data.tipo" />
 		</mat-form-field>
 
-		<label class="bonito" for="file-upload">Subir Archivo</label>
-		<input id="file-upload" type="file" (change)="onFileSelected($event)" [disabled]="data.tipo" />
-		<p *ngIf="data?.tipo">
-			¡Advertencia! No se contempla que se pueda editar el archivo, el boton Subir Archivo esta desabilitado en la
-			edicion
-		</p>
+		<div *ngIf="data.botonArchivo" class="container">
+			<label for="file-upload">Subir Archivo</label>
+			<input class="inpdddut" id="file-upload" type="file" (change)="onFileSelected($event)" />
+		</div>
 	</section>
 </section>
 <section mat-dialog-actions>

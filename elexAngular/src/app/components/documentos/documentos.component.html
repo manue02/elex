@@ -65,7 +65,7 @@
 			<ng-container matColumnDef="edit">
 				<th mat-header-cell *matHeaderCellDef>Editar</th>
 				<td mat-cell *matCellDef="let element">
-					<button mat-icon-button (click)="modalModificar(element.id)">
+					<button mat-icon-button *ngIf="estadoBool === ''" (click)="modalModificar(element.id)">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</td>
@@ -74,7 +74,7 @@
 			<ng-container matColumnDef="delete">
 				<th mat-header-cell *matHeaderCellDef>Eliminar/Activar</th>
 				<td mat-cell *matCellDef="let element">
-					<button mat-icon-button (click)="deleteData(element.id, element.vigente)">
+					<button mat-icon-button *ngIf="estadoBool === ''" (click)="deleteData(element.id, element.vigente)">
 						<mat-icon>delete</mat-icon>
 					</button>
 				</td>

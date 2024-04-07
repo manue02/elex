@@ -69,23 +69,23 @@ CREATE TABLE documentos
     PRIMARY KEY PK_documentos (id)
 );
 
-INSERT INTO tipos_expediente (materia, acciones ) VALUES
-("Civil", "H"),
-("Penal", "P"),
-("Administrativo", "R");
+INSERT INTO tipos_expediente (materia, acciones, activo) VALUES
+("Civil", "H", 1),
+("Penal", "P", 0),
+("Administrativo", "R", 1);
 
 INSERT INTO expedientes
 (codigo, fecha, estado, opciones, descripcion, tipo)
 VALUES
 ("CIV-001", "2024-03-20", "Pendiente", "Opción 1", "Expediente Civil 1", 1),
-("PEN-001", "2024-03-20", "Pendiente", "Opción 2", "Expediente Penal 1", 2),
-("ADM-001", "2024-03-20", "Pendiente", "Opción 3", "Expediente Administrativo 1", 3);
+("PEN-001", "2024-03-20", "Enviado", "Opción 2", "Expediente Penal 1", 2),
+("ADM-001", "2024-03-20", "Erróneo", "Opción 3", "Expediente Administrativo 1", 3);
 
 INSERT INTO actuaciones
 (descripcion, finalizado, fecha, expediente, observaciones, responsable)
 VALUES
 ("Actuación 1", 0, "2024-03-20", 1, "Observación 1", "Miguel Ángel García"),
-("Actuación 2", 0, "2024-03-20", 2, "Observación 2", "Santiago García Pérez"),
+("Actuación 2", 1, "2024-03-20", 2, "Observación 2", "Santiago García Pérez"),
 ("Actuación 3", 0, "2024-03-20", 3, "Observación 3", "Jose Ángel Rodríguez");
 
 

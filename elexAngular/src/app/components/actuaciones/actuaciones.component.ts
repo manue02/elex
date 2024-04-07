@@ -38,6 +38,7 @@ export class ActuacionesComponent implements OnInit {
 	ngOnInit(): void {
 		this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
 			this.dataSource = actuaciones
+			this.dataSourceOriginal = actuaciones
 		})
 
 		if (!this.loginService.isAuthenticated()) {
@@ -165,18 +166,18 @@ export class ActuacionesComponent implements OnInit {
 	}
 
 	estadoBool: string = ''
+	dataSourceOriginal: Actuaciones[] = []
 
 	applyFilter(): void {
 		if (this.estadoBool === '') {
 			this.actuacionesService.getAllActuaciones().subscribe((expedientes) => {
 				this.dataSource = expedientes
+				this.dataSourceOriginal = expedientes
 			})
-		} else if (this.estadoBool === 'true') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.finalizado === true)
-			this.estadoBool = ''
 		} else if (this.estadoBool === 'false') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.finalizado === false)
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.finalizado === true)
+		} else if (this.estadoBool === 'true') {
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.finalizado === false)
 		}
 	}
 	filtro: string = ''

@@ -33,6 +33,7 @@ export class TipoExpedienteComponent implements OnInit {
 	ngOnInit(): void {
 		this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
 			this.dataSource = tiposExpediente
+			this.dataSourceOriginal = tiposExpediente
 		})
 
 		if (!this.loginService.isAuthenticated()) {
@@ -164,18 +165,18 @@ export class TipoExpedienteComponent implements OnInit {
 	//	Aun en construccion
 
 	estadoBool: string = ''
+	dataSourceOriginal: TiposExpediente[] = []
 
 	applyFilter(): void {
 		if (this.estadoBool === '') {
 			this.tipoExpedienteService.getAllTipoExpediente().subscribe((expedientes) => {
 				this.dataSource = expedientes
+				this.dataSourceOriginal = expedientes
 			})
 		} else if (this.estadoBool === 'true') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.activo === true)
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.activo === true)
 		} else if (this.estadoBool === 'false') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.activo === false)
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.activo === false)
 		}
 	}
 

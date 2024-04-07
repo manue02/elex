@@ -29,6 +29,7 @@ export class DocumentosModalComponent implements OnInit {
 			tipo: string
 			expediente: number
 			file: File
+			botonArchivo: boolean
 		},
 		private documentosService: DocumentosService,
 		private expedientesService: ExpedienteService,

@@ -39,6 +39,7 @@ export class ExpedientesComponent implements OnInit {
 	ngOnInit(): void {
 		this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
 			this.dataSource = expedientes
+			this.dataSourceOriginal = expedientes
 		})
 		if (!this.loginService.isAuthenticated()) {
 			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
@@ -143,6 +144,7 @@ export class ExpedientesComponent implements OnInit {
 	}
 
 	estadoBool: string = ''
+	dataSourceOriginal: Expedientes[] = []
 
 	applyFilter(): void {
 		if (this.estadoBool === '') {
@@ -150,14 +152,11 @@ export class ExpedientesComponent implements OnInit {
 				this.dataSource = expedientes
 			})
 		} else if (this.estadoBool === 'Pendiente') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Pendiente')
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Pendiente')
 		} else if (this.estadoBool === 'Enviado') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Enviado')
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Enviado')
 		} else {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.estado === 'Erróneo')
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Erróneo')
 		}
 	}
 }

@@ -28,6 +28,7 @@ export class DocumentosComponent implements OnInit {
 	ngOnInit(): void {
 		this.documentosService.getAllDocumentos().subscribe((documentos) => {
 			this.dataSource = documentos
+			this.dataSourceOriginal = documentos
 		})
 
 		if (!this.loginService.isAuthenticated()) {
@@ -46,6 +47,7 @@ export class DocumentosComponent implements OnInit {
 				nombre: '',
 				tipo: '',
 				expediente: 0,
+				botonArchivo: true,
 			},
 		})
 
@@ -165,18 +167,18 @@ export class DocumentosComponent implements OnInit {
 	}
 
 	estadoBool: string = ''
+	dataSourceOriginal: Documentos[] = []
 
 	applyFilter(): void {
 		if (this.estadoBool === '') {
 			this.documentosService.getAllDocumentos().subscribe((expedientes) => {
 				this.dataSource = expedientes
+				this.dataSourceOriginal = expedientes
 			})
 		} else if (this.estadoBool === 'true') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.vigente === true)
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.vigente === true)
 		} else if (this.estadoBool === 'false') {
-			this.dataSource = this.dataSource.filter((expediente) => expediente.vigente === false)
-			this.estadoBool = ''
+			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.vigente === false)
 		}
 	}
 }
