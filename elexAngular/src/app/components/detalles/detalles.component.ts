@@ -9,6 +9,8 @@ import { ActuacionesService } from './../../service/actuaciones/actuaciones.serv
 import { Documentos } from '../../models/documentos.model'
 import { DocumentosService } from './../../service/documentos/documentos.service'
 import { delay } from 'rxjs/operators'
+import { LoginService } from './../../service/login/login.service'
+import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-detalles',
@@ -36,6 +38,8 @@ export class DetallesComponent implements OnInit {
 		private actuacionesService: ActuacionesService,
 		private documentosService: DocumentosService,
 		private route: ActivatedRoute,
+		private loginService: LoginService,
+		private router: Router,
 	) {
 		this.codigo = ''
 		this.id = 0
@@ -74,5 +78,11 @@ export class DetallesComponent implements OnInit {
 					(tipoExpediente) => tipoExpediente.id === idTipoExpediente,
 				)
 			})
+
+		if (!this.loginService.isAuthenticated()) {
+			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
+			window.alert('Redirigiendo a login, no estás autenticado')
+			this.router.navigate(['/login'])
+		}
 	}
 }

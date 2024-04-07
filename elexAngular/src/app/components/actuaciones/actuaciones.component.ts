@@ -4,6 +4,8 @@ import { ActuacionesService } from './../../service/actuaciones/actuaciones.serv
 import { MatDialog } from '@angular/material/dialog'
 import { ActuacionesModalComponent } from '../../formulario/actuaciones-modal/actuaciones-modal.component'
 import Swal from 'sweetalert2'
+import { LoginService } from './../../service/login/login.service'
+import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-actuaciones',
@@ -24,12 +26,23 @@ export class ActuacionesComponent implements OnInit {
 		'delete',
 	]
 
-	constructor(private actuacionesService: ActuacionesService, private dialog: MatDialog) {}
+	constructor(
+		private actuacionesService: ActuacionesService,
+		private dialog: MatDialog,
+		private loginService: LoginService,
+		private router: Router,
+	) {}
 
 	ngOnInit(): void {
 		this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
 			this.dataSource = actuaciones
 		})
+
+		if (!this.loginService.isAuthenticated()) {
+			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
+			window.alert('Redirigiendo a login, no estás autenticado')
+			this.router.navigate(['/login'])
+		}
 	}
 
 	modalInsertar(): void {

@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core'
 import { TipoExpedienteModalComponent } from '../../formulario/tipo-expediente-modal/tipo-expediente-modal.component'
 import { MatDialog } from '@angular/material/dialog'
 import Swal from 'sweetalert2'
+import { LoginService } from './../../service/login/login.service'
+import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-tipo-expediente',
@@ -15,7 +17,12 @@ export class TipoExpedienteComponent implements OnInit {
 	displayedColumns: string[] = ['id', 'materia', 'acciones', 'activo', 'edit', 'delete']
 	itemsFiltrados = this.dataSource
 
-	constructor(private tipoExpedienteService: TipoExpedienteService, private dialog: MatDialog) {}
+	constructor(
+		private tipoExpedienteService: TipoExpedienteService,
+		private dialog: MatDialog,
+		private loginService: LoginService,
+		private router: Router,
+	) {}
 
 	//	Metodo que se ejecuta al iniciar el componente
 	//	Se llama del servicio la funcion getAllTipoExpediente para obtener todos los tipos de expediente
@@ -25,6 +32,12 @@ export class TipoExpedienteComponent implements OnInit {
 		this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
 			this.dataSource = tiposExpediente
 		})
+
+		if (!this.loginService.isAuthenticated()) {
+			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
+			window.alert('Redirigiendo a login, no estás autenticado')
+			this.router.navigate(['/login'])
+		}
 	}
 
 	//	Metodo que abre un modal para insertar un tipo de expediente

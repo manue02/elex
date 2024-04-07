@@ -4,6 +4,8 @@ import { DocumentosService } from './../../service/documentos/documentos.service
 import { MatDialog } from '@angular/material/dialog'
 import { DocumentosModalComponent } from '../../formulario/documentos-modal/documentos-modal.component'
 import Swal from 'sweetalert2'
+import { LoginService } from './../../service/login/login.service'
+import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-documentos',
@@ -14,12 +16,23 @@ export class DocumentosComponent implements OnInit {
 	dataSource: Documentos[] = []
 	displayedColumns: string[] = ['id', 'tasa', 'vigente', 'nombre', 'tipo', 'expdiente', 'BLOB', 'edit', 'delete']
 
-	constructor(private documentosService: DocumentosService, private dialog: MatDialog) {}
+	constructor(
+		private documentosService: DocumentosService,
+		private dialog: MatDialog,
+		private loginService: LoginService,
+		private router: Router,
+	) {}
 
 	ngOnInit(): void {
 		this.documentosService.getAllDocumentos().subscribe((documentos) => {
 			this.dataSource = documentos
 		})
+
+		if (!this.loginService.isAuthenticated()) {
+			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
+			window.alert('Redirigiendo a login, no estás autenticado')
+			this.router.navigate(['/login'])
+		}
 	}
 
 	modalInsertar(): void {

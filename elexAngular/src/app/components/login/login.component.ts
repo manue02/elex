@@ -1,3 +1,4 @@
+import { LoginService } from './../../service/login/login.service'
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 
@@ -9,14 +10,17 @@ import { Router } from '@angular/router'
 export class LoginComponent implements OnInit {
 	email = ''
 	password = ''
-	constructor(private router: Router) {}
+	constructor(private router: Router, private loginService: LoginService) {}
 
 	ngOnInit() {}
 
 	onSubmit(): void {
-		if (this.email === 'soltel' && this.password === 'admin') {
-			// redirigir a la página de inicio
+		const succes = this.loginService.login(this.email, this.password)
+
+		if (succes) {
 			this.router.navigate(['/home'])
+		} else {
+			alert('Usuario o contraseña incorrectos')
 		}
 	}
 }

@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog'
 import { ExpedienteModalComponent } from '../../formulario/expediente-modal/expediente-modal.component'
 import { Estado } from '../../models/estado.enum'
 import Swal from 'sweetalert2'
+import { LoginService } from './../../service/login/login.service'
+import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-expedientes',
@@ -25,12 +27,22 @@ export class ExpedientesComponent implements OnInit {
 		'detalles',
 	]
 
-	constructor(private ExpedienteService: ExpedienteService, private dialog: MatDialog) {}
+	constructor(
+		private ExpedienteService: ExpedienteService,
+		private dialog: MatDialog,
+		private loginService: LoginService,
+		private router: Router,
+	) {}
 
 	ngOnInit(): void {
 		this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
 			this.dataSource = expedientes
 		})
+		if (!this.loginService.isAuthenticated()) {
+			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
+			window.alert('Redirigiendo a login, no estás autenticado')
+			this.router.navigate(['/login'])
+		}
 	}
 
 	modalInsertar(): void {
