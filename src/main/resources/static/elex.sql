@@ -69,33 +69,24 @@ CREATE TABLE documentos
     PRIMARY KEY PK_documentos (id)
 );
 
-INSERT INTO tipos_expediente (materia)
-VALUES ("Judicial"), ("Asistencia"), ("Informe"), ("Moción");
+INSERT INTO tipos_expediente (materia, acciones ) VALUES
+("Civil", "H"),
+("Penal", "P"),
+("Administrativo", "R");
 
 INSERT INTO expedientes
 (codigo, fecha, estado, opciones, descripcion, tipo)
 VALUES
-("SEV-20240320-001", "2024-03-20", 'Pendiente', "Urgente, Confidencial", "Test1", 1),
-("SEV-20240320-002", "2024-03-20", 'Pendiente', "Urgente, Confidencial", "Test2", 2),
-("SEV-20240320-003", "2024-03-20", 'Enviado', "Urgente", "Test3", 1);
+("CIV-001", "2024-03-20", "Pendiente", "Opción 1", "Expediente Civil 1", 1),
+("PEN-001", "2024-03-20", "Pendiente", "Opción 2", "Expediente Penal 1", 2),
+("ADM-001", "2024-03-20", "Pendiente", "Opción 3", "Expediente Administrativo 1", 3);
 
 INSERT INTO actuaciones
-(descripcion, finalizado, fecha, expediente)
+(descripcion, finalizado, fecha, expediente, observaciones, responsable)
 VALUES
-("Actuación 1", 0, "2024-03-20", 1),
-("Actuación 2", 0, "2024-03-20", 2),
-("Actuación 3", 1, "2024-03-21", 3);
+("Actuación 1", 0, "2024-03-20", 1, "Observación 1", "Miguel Ángel García"),
+("Actuación 2", 0, "2024-03-20", 2, "Observación 2", "Santiago García Pérez"),
+("Actuación 3", 0, "2024-03-20", 3, "Observación 3", "Jose Ángel Rodríguez");
 
 
-INSERT INTO documentos
-(ruta, tasa, expediente)
-VALUES 
-("static/pdfs/doc001.dpdf", 100.55, 1),
-("static/pdfs/doc002.dpdf", 90.55, 2),
-("static/pdfs/doc003.dpdf", 80.55, 3);
-
-SELECT * FROM tipos_expediente;
-SELECT * FROM expedientes;
-SELECT * FROM actuaciones;
-SELECT * FROM documentos;
 
