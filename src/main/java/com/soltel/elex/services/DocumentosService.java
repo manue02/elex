@@ -25,12 +25,10 @@ public class DocumentosService {
         return documentosRepository.findAllByExpedienteId(idExpediente);
     }
 
-    @SuppressWarnings("null")
     public Optional<DocumentosModel> findById(Integer id) {
         return documentosRepository.findById(id);
     }
 
-    @SuppressWarnings("null")
     public DocumentosModel saveDocumento(DocumentosModel documento) {
         return documentosRepository.save(documento);
     }

@@ -7,6 +7,8 @@ import { PaginaNoEncontradaComponent } from './components/pagina-no-encontrada/p
 import { DocumentosComponent } from './components/documentos/documentos.component'
 import { ExpedientesComponent } from './components/expedientes/expedientes.component'
 import { DetallesComponent } from './components/detalles/detalles.component'
+import { LoginComponent } from './components/login/login.component'
+import { HomeComponent } from './components/home/home.component'
 
 const routes: Routes = [
 	{ path: 'expediente', component: ExpedientesComponent },
@@ -15,8 +17,10 @@ const routes: Routes = [
 	{ path: 'documentos', component: DocumentosComponent },
 	{ path: 'menu', component: MenuComponent },
 	{ path: 'detalles/:codigo/:tipo', component: DetallesComponent },
+	{ path: 'login', component: LoginComponent },
+	{ path: 'home', component: HomeComponent },
 
-	{ path: '', redirectTo: '/menu', pathMatch: 'full' }, // Default route
+	{ path: '', redirectTo: '/login', pathMatch: 'full' }, // Default route
 	{ path: '**', component: PaginaNoEncontradaComponent }, // Wildcard route
 ]
 

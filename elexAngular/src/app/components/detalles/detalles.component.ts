@@ -8,6 +8,7 @@ import { Actuaciones } from '../../models/actuaciones.model'
 import { ActuacionesService } from './../../service/actuaciones/actuaciones.service'
 import { Documentos } from '../../models/documentos.model'
 import { DocumentosService } from './../../service/documentos/documentos.service'
+import { delay } from 'rxjs/operators'
 
 @Component({
 	selector: 'app-detalles',
@@ -61,12 +62,17 @@ export class DetallesComponent implements OnInit {
 			this.dataSourceDocumentos = documentos.filter((documento) => documento.expediente.codigo === this.codigo)
 		})
 
-		this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
-			for (let i = 0; i < this.dataSourceExpediente.length; i++) {
-				idTipoExpediente = this.dataSourceExpediente[i].tiposExpediente.id
-			}
+		this.tipoExpedienteService
+			.getAllTipoExpediente()
+			.pipe(delay(100))
+			.subscribe((tiposExpediente) => {
+				for (let i = 0; i < this.dataSourceExpediente.length; i++) {
+					idTipoExpediente = this.dataSourceExpediente[i].tiposExpediente.id
+				}
 
-			this.dataSourceTipoExpediente = tiposExpediente.filter((tipoExpediente) => tipoExpediente.id === idTipoExpediente)
-		})
+				this.dataSourceTipoExpediente = tiposExpediente.filter(
+					(tipoExpediente) => tipoExpediente.id === idTipoExpediente,
+				)
+			})
 	}
 }

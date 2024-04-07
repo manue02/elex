@@ -1,0 +1,8 @@
+<form (ngSubmit)="onSubmit()" class="login-container">
+	<div class="login wrap">
+		<div class="h1">Iniciar Sesión</div>
+		<input placeholder="Usuario" id="email" name="email" type="text" [(ngModel)]="email" />
+		<input placeholder="Password" id="password" name="password" type="password" [(ngModel)]="password" />
+		<input value="Login" class="btn" type="submit" />
+	</div>
+</form>

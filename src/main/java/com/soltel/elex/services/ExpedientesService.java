@@ -52,7 +52,6 @@ public class ExpedientesService {
      * @param expediente el expediente a guardar
      * @return el expediente guardado
      */
-    @SuppressWarnings("null")
     public ExpedientesModel saveExpediente(ExpedientesModel expediente) {
         return expedientesRepository.save(expediente);
     }
@@ -61,7 +60,6 @@ public class ExpedientesService {
         return expedientesRepository.findByEstadoAndFechaBetween(estado, fechaInicio, fechaFin);
     }
 
-    @SuppressWarnings("null")
     public Optional<ExpedientesModel> findById(Integer id) {
         return expedientesRepository.findById(id);
     }

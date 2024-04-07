@@ -26,12 +26,10 @@ public class ActuacionesService {
         return actuacionesRepository.findAllByExpedienteId(expediente);
     }
 
-    @SuppressWarnings("null")
     public Optional<ActuacionesModel> findById(Integer id) {
         return actuacionesRepository.findById(id);
     }
 
-    @SuppressWarnings("null")
     public ActuacionesModel saveActuacion(ActuacionesModel actuacion) {
         return actuacionesRepository.save(actuacion);
     }

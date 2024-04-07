@@ -45,7 +45,6 @@ public class TiposExpedientesService {
      * @param id el id del expediente a buscar
      * @return un Optional que contiene el expediente si se encontró, o está vacío si no se encontró
      */
-    @SuppressWarnings("null")
     public Optional<TiposExpedienteModel> findById(Integer id) {
         return tiposExpedientesRepository.findById(id);
     }
@@ -56,7 +55,6 @@ public class TiposExpedientesService {
      * @param tipoExpediente el tipo de expediente a guardar
      * @return el tipo de expediente guardado
      */
-    @SuppressWarnings("null")
     public TiposExpedienteModel saveTipoExpediente(TiposExpedienteModel tipoExpediente) {
         return tiposExpedientesRepository.save(tipoExpediente);
     }

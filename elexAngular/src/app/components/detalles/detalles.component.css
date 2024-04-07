@@ -6,6 +6,10 @@ section > mat-card > mat-card-content > section > p {
 	margin-top: 1%;
 }
 
+p {
+	color: #ffffff;
+}
+
 h1 {
 	color: #4d5e91;
 	letter-spacing: -3px;

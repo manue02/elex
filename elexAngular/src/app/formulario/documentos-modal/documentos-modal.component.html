@@ -32,9 +32,9 @@
 			<input matInput [(ngModel)]="data.tipo" />
 		</mat-form-field>
 
-		<label class="bonito" for="file-upload">Archivo</label>
+		<label class="bonito" for="file-upload">Subir Archivo</label>
 		<input id="file-upload" type="file" (change)="onFileSelected($event)" [disabled]="data.tipo" />
-		<p *ngIf="data?.tipo">El botón está deshabilitado</p>
+		<p *ngIf="data?.tipo">boton Subir Archivo desabilitado no se contempla editar el archivo asociado a un documento</p>
 	</section>
 </section>
 <section mat-dialog-actions>
