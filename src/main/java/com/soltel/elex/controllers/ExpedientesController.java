@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.soltel.elex.models.DocumentosModel;
 import com.soltel.elex.models.Estado;
 import com.soltel.elex.models.ExpedientesModel;
 import com.soltel.elex.models.TiposExpedienteModel;
 import com.soltel.elex.services.ExpedientesService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 /**
  * Controlador para la gestión de expedientes.
@@ -178,5 +181,31 @@ public class ExpedientesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener los expedientes por tipo: " + e.getMessage());
         }
     }
+
+    // @PutMapping("/eliminar/{id}/{activo}")
+    // public ResponseEntity<?> putEliminarExpediente(@PathVariable Integer id, @PathVariable Boolean activo) {
+
+    //     try {
+    //         Optional<ExpedientesModel> expediente = expedientesService.findById(id);
+    //         if (expediente.isPresent()) {
+    //             ExpedientesModel expedienteEliminar = expediente.get();
+
+    //             if (activo) {
+    //             expedienteEliminar.setVigente(false);
+    //             return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
+             
+    //             }else{
+    //             expedienteEliminar.setVigente(true);
+    //             return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
+    //             }
+
+    //         } else {
+    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido eliminar el expediente revise los datos");
+    //         }
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el expediente: " + e.getMessage());
+    //     }
+    
+    // }
     
 }
