@@ -5,7 +5,7 @@
 <mat-card class="mt-4">
 	<mat-card-content>
 		<mat-form-field>
-			<mat-label>Filter</mat-label>
+			<mat-label>Buscar Codigo</mat-label>
 			<input matInput [(ngModel)]="filtro" (ngModelChange)="filtrarPorNombre()" #materiaInput />
 		</mat-form-field>
 
@@ -62,7 +62,7 @@
 			<ng-container matColumnDef="edit">
 				<th mat-header-cell *matHeaderCellDef>Editar</th>
 				<td mat-cell *matCellDef="let element">
-					<button *ngIf="estadoBool === ''" mat-icon-button (click)="modalModificar(element.id)">
+					<button mat-icon-button (click)="modalModificar(element.id)">
 						<mat-icon>edit</mat-icon>
 					</button>
 				</td>

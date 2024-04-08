@@ -135,6 +135,13 @@ export class DocumentosComponent implements OnInit {
 
 						Swal.hideLoading() // Oculta el spinner
 						Swal.fire('Eliminado!', 'El documento ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+							.then(() => {
+								this.documentosService.getAllDocumentos().subscribe((documentos) => {
+									this.dataSource = documentos
+									this.dataSourceOriginal = documentos
+								})
+								location.reload()
+							})
 					}
 				})
 			}
@@ -155,17 +162,6 @@ export class DocumentosComponent implements OnInit {
 		})
 	}
 
-	filtro: string = ''
-	filtrarPorNombre(): void {
-		if (this.filtro) {
-			this.dataSource = this.dataSource.filter((tipoExpediente) =>
-				tipoExpediente.nombre.toLowerCase().includes(this.filtro.toLowerCase()),
-			)
-		} else {
-			this.documentosService.getAllDocumentos().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
-		}
-	}
-
 	estadoBool: string = ''
 	dataSourceOriginal: Documentos[] = []
 
@@ -180,5 +176,20 @@ export class DocumentosComponent implements OnInit {
 		} else if (this.estadoBool === 'false') {
 			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.vigente === false)
 		}
+	}
+
+	filtro: string = ''
+	dataSourceFiltrada: Documentos[] = []
+	filtrarPorNombre(): void {
+		this.documentosService.getAllDocumentos().subscribe((documentos) => {
+			this.dataSourceFiltrada = documentos
+			if (this.filtro) {
+				this.dataSource = this.dataSourceFiltrada.filter((tipoExpediente) =>
+					tipoExpediente.nombre.toLowerCase().includes(this.filtro.toLowerCase()),
+				)
+			} else {
+				this.documentosService.getAllDocumentos().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+			}
+		})
 	}
 }

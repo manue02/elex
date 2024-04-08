@@ -133,14 +133,19 @@ export class ExpedientesComponent implements OnInit {
 	}
 
 	filtro: string = ''
+	dataSourceFiltrada: Expedientes[] = []
 	filtrarPorNombre(): void {
-		if (this.filtro) {
-			this.dataSource = this.dataSource.filter((tipoExpediente) =>
-				tipoExpediente.codigo.toLowerCase().includes(this.filtro.toLowerCase()),
-			)
-		} else {
-			this.ExpedienteService.getAllExpediente().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
-		}
+		this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+			this.dataSourceFiltrada = expedientes
+
+			if (this.filtro) {
+				this.dataSource = this.dataSourceFiltrada.filter((tipoExpediente) =>
+					tipoExpediente.codigo.toLowerCase().includes(this.filtro.toLowerCase()),
+				)
+			} else {
+				this.ExpedienteService.getAllExpediente().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+			}
+		})
 	}
 
 	estadoBool: string = ''

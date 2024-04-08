@@ -159,6 +159,13 @@ export class ActuacionesComponent implements OnInit {
 
 						Swal.hideLoading() // Oculta el spinner
 						Swal.fire('Eliminado!', 'La actuación ha sido eliminada.', 'success') // Muestra un mensaje de éxito
+							.then(() => {
+								this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
+									this.dataSource = actuaciones
+									this.dataSourceOriginal = actuaciones
+								})
+								location.reload()
+							})
 					}
 				})
 			}
@@ -181,13 +188,18 @@ export class ActuacionesComponent implements OnInit {
 		}
 	}
 	filtro: string = ''
+	dataSourceFiltrada: Actuaciones[] = []
 	filtrarPorNombre(): void {
-		if (this.filtro) {
-			this.dataSource = this.dataSource.filter((tipoExpediente) =>
-				tipoExpediente.responsable.toLowerCase().includes(this.filtro.toLowerCase()),
-			)
-		} else {
-			this.actuacionesService.getAllActuaciones().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
-		}
+		this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
+			this.dataSourceFiltrada = actuaciones
+
+			if (this.filtro) {
+				this.dataSource = this.dataSourceFiltrada.filter((tipoExpediente) =>
+					tipoExpediente.responsable.toLowerCase().includes(this.filtro.toLowerCase()),
+				)
+			} else {
+				this.actuacionesService.getAllActuaciones().subscribe((tiposExpediente) => (this.dataSource = tiposExpediente))
+			}
+		})
 	}
 }

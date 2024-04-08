@@ -111,6 +111,13 @@ export class TipoExpedienteComponent implements OnInit {
 
 					Swal.hideLoading() // Oculta el spinner
 					Swal.fire('Eliminado!', 'El expediente ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+						.then(() => {
+							this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
+								this.dataSource = tiposExpediente
+								this.dataSourceOriginal = tiposExpediente
+							})
+							location.reload()
+						})
 				})
 			}
 		})
@@ -186,7 +193,7 @@ export class TipoExpedienteComponent implements OnInit {
 		this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
 			this.dataSourceFiltrada = tiposExpediente
 			if (this.filtro) {
-				this.dataSource = this.dataSource.filter((tipoExpediente) =>
+				this.dataSource = this.dataSourceFiltrada.filter((tipoExpediente) =>
 					tipoExpediente.materia.toLowerCase().includes(this.filtro.toLowerCase()),
 				)
 			} else {
