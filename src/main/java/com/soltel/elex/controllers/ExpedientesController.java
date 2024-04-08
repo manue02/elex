@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soltel.elex.models.DocumentosModel;
 import com.soltel.elex.models.Estado;
 import com.soltel.elex.models.ExpedientesModel;
 import com.soltel.elex.models.TiposExpedienteModel;
 import com.soltel.elex.services.ExpedientesService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 /**
