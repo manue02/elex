@@ -22,9 +22,11 @@ export class ExpedientesComponent implements OnInit {
 		'codigo',
 		'fecha',
 		'estado',
+		'activo',
 		'opciones',
 		'descripcion',
 		'idTipoExpediente',
+		'delete',
 		'edit',
 		'detalles',
 	]
@@ -40,6 +42,7 @@ export class ExpedientesComponent implements OnInit {
 		this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
 			this.dataSource = expedientes
 			this.dataSourceOriginal = expedientes
+			this.dataSourceOriginalActivo = expedientes
 		})
 		if (!this.loginService.isAuthenticated()) {
 			// Si el usuario no está autenticado, muestra un mensaje y luego redirige a la página de inicio de sesión
@@ -58,6 +61,7 @@ export class ExpedientesComponent implements OnInit {
 				opciones: '',
 				descripcion: '',
 				idTipoExpediente: 0,
+				activo: true,
 			},
 		})
 
@@ -69,6 +73,7 @@ export class ExpedientesComponent implements OnInit {
 					result.idTipoExpediente,
 					result.codigo,
 					result.fecha,
+					result.activo,
 					result.estado,
 					result.opciones,
 					result.descripcion,
@@ -87,6 +92,13 @@ export class ExpedientesComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+										this.dataSource = expedientes
+										this.dataSourceOriginal = expedientes
+										this.dataSourceOriginalActivo = expedientes
+									})
+								})
 						}
 					})
 			}
@@ -115,6 +127,9 @@ export class ExpedientesComponent implements OnInit {
 						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Error!', 'Ha ocurrido un error al modificar el expediente.', 'error') // Muestra un mensaje de error
+								.then(() => {
+									location.reload()
+								})
 							return of(null)
 						}),
 					)
@@ -126,8 +141,51 @@ export class ExpedientesComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+										this.dataSource = expedientes
+										this.dataSourceOriginal = expedientes
+										this.dataSourceOriginalActivo = expedientes
+									})
+								})
 						}
 					})
+			}
+		})
+	}
+
+	deleteData(id: number, activo: boolean) {
+		Swal.fire({
+			title: '¿Estás seguro?',
+			text: '¡No podrás revertir esto!',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '¡Sí, bórralo!',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.showLoading() // Muestra el spinner
+
+				this.ExpedienteService.deleteExpediente(id, activo).subscribe((expediente) => {
+					const index = this.dataSource.findIndex((expediente) => expediente.id === id)
+
+					if (index !== -1) {
+						this.dataSource[index] = expediente
+						this.dataSource = [...this.dataSource]
+
+						Swal.hideLoading() // Oculta el spinner
+						Swal.fire('¡Eliminado!', 'El expediente ha sido eliminado.', 'success') // Muestra un mensaje de éxito
+							.then(() => {
+								this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+									this.dataSource = expedientes
+									this.dataSourceOriginal = expedientes
+									this.dataSourceOriginalActivo = expedientes
+								})
+								location.reload()
+							})
+					}
+				})
 			}
 		})
 	}
@@ -150,18 +208,48 @@ export class ExpedientesComponent implements OnInit {
 
 	estadoBool: string = ''
 	dataSourceOriginal: Expedientes[] = []
+	estadoBoolActivo: string = ''
+	dataSourceOriginalActivo: Expedientes[] = []
 
 	applyFilter(): void {
-		if (this.estadoBool === '') {
-			this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
-				this.dataSource = expedientes
-			})
-		} else if (this.estadoBool === 'Pendiente') {
-			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Pendiente')
-		} else if (this.estadoBool === 'Enviado') {
-			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Enviado')
-		} else {
-			this.dataSource = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Erróneo')
-		}
+		this.ExpedienteService.getAllExpediente().subscribe((expedientes) => {
+			this.dataSourceOriginal = expedientes
+			this.dataSourceOriginalActivo = expedientes
+
+			if (this.estadoBool !== '') {
+				if (this.estadoBool === 'Pendiente') {
+					this.dataSourceOriginal = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Pendiente')
+				} else if (this.estadoBool === 'Enviado') {
+					this.dataSourceOriginal = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Enviado')
+				} else {
+					this.dataSourceOriginal = this.dataSourceOriginal.filter((expediente) => expediente.estado === 'Erróneo')
+				}
+			}
+
+			if (this.estadoBoolActivo !== '') {
+				if (this.estadoBoolActivo === 'true') {
+					this.dataSourceOriginalActivo = this.dataSourceOriginalActivo.filter(
+						(expediente) => expediente.activo === true,
+					)
+					for (let i = 0; i < this.dataSourceOriginalActivo.length; i++) {
+						console.log(this.dataSourceOriginalActivo[i])
+					}
+				}
+
+				if (this.estadoBoolActivo === 'false') {
+					this.dataSourceOriginalActivo = this.dataSourceOriginalActivo.filter(
+						(expediente) => expediente.activo === false,
+					)
+
+					for (let i = 0; i < this.dataSourceOriginalActivo.length; i++) {
+						console.log(this.dataSourceOriginalActivo[i])
+					}
+				}
+			}
+
+			this.dataSource = this.dataSourceOriginal.filter((expediente) =>
+				this.dataSourceOriginalActivo.includes(expediente),
+			)
+		})
 	}
 }

@@ -71,6 +71,12 @@ export class DocumentosComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Insertado!', 'El documento ha sido insertado.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.documentosService.getAllDocumentos().subscribe((documentos) => {
+										this.dataSource = documentos
+										this.dataSourceOriginal = documentos
+									})
+								})
 						}
 					})
 			}
@@ -93,6 +99,9 @@ export class DocumentosComponent implements OnInit {
 						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Error!', 'Ha ocurrido un error al modificar el documento.', 'error') // Muestra un mensaje de error
+								.then(() => {
+									location.reload()
+								})
 							return of(null)
 						}),
 					)
@@ -106,6 +115,12 @@ export class DocumentosComponent implements OnInit {
 
 								Swal.hideLoading() // Oculta el spinner
 								Swal.fire('Modificado!', 'El documento ha sido modificado.', 'success') // Muestra un mensaje de éxito
+									.then(() => {
+										this.documentosService.getAllDocumentos().subscribe((documentos) => {
+											this.dataSource = documentos
+											this.dataSourceOriginal = documentos
+										})
+									})
 							}
 						}
 					})

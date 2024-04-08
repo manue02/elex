@@ -34,6 +34,7 @@ CREATE TABLE expedientes
     estado ENUM('Pendiente','Enviado', 'Erróneo') DEFAULT 'Pendiente',
     opciones VARCHAR(70) DEFAULT "",
     descripcion VARCHAR(255) NOT NULL,
+    activo BOOLEAN DEFAULT 0,
 	tipo TINYINT NOT NULL,
     FOREIGN KEY (tipo) REFERENCES tipos_expediente (id),
     PRIMARY KEY PK_expedientes (id)

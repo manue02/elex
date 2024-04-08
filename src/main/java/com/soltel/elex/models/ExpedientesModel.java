@@ -30,6 +30,9 @@ public class ExpedientesModel {
     @Column(name = "descripcion")
     private String descripcion;
 
+    @Column(name = "activo")
+    private Boolean activo;
+
     @OneToMany(mappedBy = "expediente")
     private Set<ActuacionesModel> actuaciones;
 
@@ -64,6 +67,10 @@ public class ExpedientesModel {
         return descripcion;
     }
 
+    public Boolean getActivo() {
+        return activo;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -88,6 +95,10 @@ public class ExpedientesModel {
         this.descripcion = descripcion;
     }
 
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
     public TiposExpedienteModel getTiposExpediente() {
         return tiposExpediente;
     }
@@ -99,10 +110,11 @@ public class ExpedientesModel {
     public ExpedientesModel() {
     }
 
-    public ExpedientesModel(String codigo, LocalDate fecha, Estado estado, String opciones, String descripcion, TiposExpedienteModel tiposExpediente) {
+    public ExpedientesModel(String codigo, LocalDate fecha,  Boolean activo , Estado estado,String opciones, String descripcion, TiposExpedienteModel tiposExpediente) {
         this.codigo = codigo;
         this.fecha = fecha;
         this.estado = estado;
+        this.activo = activo;
         this.opciones = opciones;
         this.descripcion = descripcion;
         this.tiposExpediente = tiposExpediente;

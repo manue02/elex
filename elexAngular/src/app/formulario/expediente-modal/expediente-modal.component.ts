@@ -31,6 +31,7 @@ export class ExpedienteModalComponent implements OnInit {
 			estado: Estado
 			opciones: string
 			descripcion: string
+			activo: boolean
 		},
 		private expedienteService: ExpedienteService,
 		private tipoExpedienteService: TipoExpedienteService,

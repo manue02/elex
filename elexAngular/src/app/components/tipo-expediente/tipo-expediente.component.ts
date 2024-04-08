@@ -75,6 +75,12 @@ export class TipoExpedienteComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Insertado!', 'El expediente ha sido insertado.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
+										this.dataSource = tiposExpediente
+										this.dataSourceOriginal = tiposExpediente
+									})
+								})
 						}
 					})
 			}
@@ -148,6 +154,9 @@ export class TipoExpedienteComponent implements OnInit {
 						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Error!', 'Ha ocurrido un error al modificar el expediente.', 'error') // Muestra un mensaje de error
+								.then(() => {
+									location.reload()
+								})
 							return of(null)
 						}),
 					)
@@ -162,6 +171,12 @@ export class TipoExpedienteComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.tipoExpedienteService.getAllTipoExpediente().subscribe((tiposExpediente) => {
+										this.dataSource = tiposExpediente
+										this.dataSourceOriginal = tiposExpediente
+									})
+								})
 						}
 					})
 			}

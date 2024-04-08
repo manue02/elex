@@ -28,11 +28,12 @@ export class ExpedienteService {
 		idTipoExpediente: number,
 		codigo: string,
 		fecha: Date,
+		activo: boolean,
 		estado: Estado,
 		opciones: string,
 		descripcion: string,
 	): Observable<Expedientes> {
-		const url = `${this.baseURL}/insertar/${idTipoExpediente}/${codigo}/${fecha}/${estado}/${opciones}/${descripcion}`
+		const url = `${this.baseURL}/insertar/${idTipoExpediente}/${codigo}/${fecha}/${activo}/${estado}/${opciones}/${descripcion}`
 		return this.http.post<Expedientes>(url, {}).pipe(
 			catchError((error) => {
 				console.error('Ocurrió un error al insertar el Expediente', error)
@@ -55,6 +56,16 @@ export class ExpedienteService {
 		return this.http.put<Expedientes>(url, {}).pipe(
 			catchError((error) => {
 				console.error('Ocurrió un error al modificar el Expediente', error)
+				throw error
+			}),
+		)
+	}
+
+	deleteExpediente(id: number, activo: boolean): Observable<Expedientes> {
+		const url = `${this.baseURL}/eliminar/${id}/${activo}`
+		return this.http.put<Expedientes>(url, {}).pipe(
+			catchError((error) => {
+				console.error('Ocurrió un error al eliminar el Expediente', error)
 				throw error
 			}),
 		)

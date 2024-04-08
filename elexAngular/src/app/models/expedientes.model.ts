@@ -9,6 +9,7 @@ export interface Expedientes {
 	estado: string // Asume que Estado es un enum y se manejará como string en TypeScript
 	opciones: string
 	descripcion: string
+	activo: boolean
 	documentos: Documentos[]
 	actuaciones: Actuaciones[]
 	tiposExpediente: TiposExpediente // Asume que tienes una interfaz TiposExpediente definida

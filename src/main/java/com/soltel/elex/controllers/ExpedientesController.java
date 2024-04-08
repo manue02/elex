@@ -88,8 +88,8 @@ public class ExpedientesController {
      * @param descripcion la descripción del nuevo expediente
      * @return el expediente insertado
      */
-    @PostMapping("/insertar/{idTipoExpediente}/{codigo}/{fecha}/{estado}/{opciones}/{descripcion}")
-    public ResponseEntity<?> postInsertarExpediente(@PathVariable Integer idTipoExpediente, @PathVariable String codigo, @PathVariable LocalDate fecha, @PathVariable Estado estado,
+    @PostMapping("/insertar/{idTipoExpediente}/{codigo}/{fecha}/{activo}/{estado}/{opciones}/{descripcion}")
+    public ResponseEntity<?> postInsertarExpediente(@PathVariable Integer idTipoExpediente, @PathVariable String codigo, @PathVariable LocalDate fecha, @PathVariable Boolean activo,@PathVariable Estado estado,
                                                     @PathVariable String opciones, @PathVariable String descripcion) {
         try {
             Optional<TiposExpedienteModel> tipoExpedienteBusqueda = tiposExpedientesService.findById(idTipoExpediente);
@@ -100,7 +100,7 @@ public class ExpedientesController {
                 descripcion = tiposExpedientesService.subStringMateria(descripcion);
                 opciones = opciones.toLowerCase();
 
-                ExpedientesModel nuevoExpediente = new ExpedientesModel(codigoMayusculas, fecha, estado, opciones, descripcion, tipoExpediente);
+                ExpedientesModel nuevoExpediente = new ExpedientesModel(codigoMayusculas, fecha, activo, estado, opciones, descripcion, tipoExpediente);
                 return ResponseEntity.ok(expedientesService.saveExpediente(nuevoExpediente));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido insertar un nuevo Expediente revise los datos");
@@ -132,6 +132,7 @@ public class ExpedientesController {
                 TiposExpedienteModel tipoExpediente = tipoExpedienteBusqueda.get();
     
                 expediente.setFecha(fecha);
+                expediente.setCodigo(codigo.toUpperCase());
                 expediente.setEstado(estado);
                 expediente.setOpciones(opciones.toLowerCase());
                 expediente.setDescripcion(tiposExpedientesService.subStringMateria(descripcion));
@@ -180,30 +181,30 @@ public class ExpedientesController {
         }
     }
 
-    // @PutMapping("/eliminar/{id}/{activo}")
-    // public ResponseEntity<?> putEliminarExpediente(@PathVariable Integer id, @PathVariable Boolean activo) {
+    @PutMapping("/eliminar/{id}/{activo}")
+    public ResponseEntity<?> putEliminarExpediente(@PathVariable Integer id, @PathVariable Boolean activo) {
 
-    //     try {
-    //         Optional<ExpedientesModel> expediente = expedientesService.findById(id);
-    //         if (expediente.isPresent()) {
-    //             ExpedientesModel expedienteEliminar = expediente.get();
+        try {
+            Optional<ExpedientesModel> expediente = expedientesService.findById(id);
+            if (expediente.isPresent()) {
+                 ExpedientesModel expedienteEliminar = expediente.get();
 
-    //             if (activo) {
-    //             expedienteEliminar.setVigente(false);
-    //             return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
+                if (activo) {
+                    expedienteEliminar.setActivo(false);
+                    return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
              
-    //             }else{
-    //             expedienteEliminar.setVigente(true);
-    //             return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
-    //             }
+                }else{
+                    expedienteEliminar.setActivo(true);
+                    return ResponseEntity.ok(expedientesService.saveExpediente(expedienteEliminar));
+                }
 
-    //         } else {
-    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido eliminar el expediente revise los datos");
-    //         }
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el expediente: " + e.getMessage());
-    //     }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se a podido eliminar el expediente revise los datos");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el expediente: " + e.getMessage());
+        }
     
-    // }
+    }
     
 }

@@ -88,6 +88,12 @@ export class ActuacionesComponent implements OnInit {
 
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Insertado!', 'La actuación ha sido insertada.', 'success') // Muestra un mensaje de éxito
+								.then(() => {
+									this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
+										this.dataSource = actuaciones
+										this.dataSourceOriginal = actuaciones
+									})
+								})
 						}
 					})
 			}
@@ -117,6 +123,10 @@ export class ActuacionesComponent implements OnInit {
 						catchError((error) => {
 							Swal.hideLoading() // Oculta el spinner
 							Swal.fire('Error!', 'Ha ocurrido un error al modificar la actuación.', 'error') // Muestra un mensaje de error
+								.then(() => {
+									location.reload()
+								})
+
 							return of(null)
 						}),
 					)
@@ -130,6 +140,12 @@ export class ActuacionesComponent implements OnInit {
 
 								Swal.hideLoading() // Oculta el spinner
 								Swal.fire('Modificado!', 'El expediente ha sido modificado.', 'success') // Muestra un mensaje de éxito
+									.then(() => {
+										this.actuacionesService.getAllActuaciones().subscribe((actuaciones) => {
+											this.dataSource = actuaciones
+											this.dataSourceOriginal = actuaciones
+										})
+									})
 							}
 						}
 					})
