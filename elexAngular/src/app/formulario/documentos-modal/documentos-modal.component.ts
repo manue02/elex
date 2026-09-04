@@ -10,6 +10,7 @@ import { ExpedienteService } from '../../service/expediente/expediente.service'
 
 @Component({
 	selector: 'app-documentos-modal',
+  standalone: false,
 	templateUrl: './documentos-modal.component.html',
 	styleUrl: './documentos-modal.component.css',
 })

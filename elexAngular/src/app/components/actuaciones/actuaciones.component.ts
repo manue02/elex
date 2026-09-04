@@ -11,6 +11,7 @@ import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-actuaciones',
+  standalone: false,
 	templateUrl: './actuaciones.component.html',
 	styleUrl: './actuaciones.component.css',
 })

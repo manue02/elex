@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 
 @Component({
 	selector: 'app-tipo-expediente-modal',
+  standalone: false,
 	templateUrl: './tipo-expediente-modal.component.html',
 	styleUrl: './tipo-expediente-modal.component.css',
 })

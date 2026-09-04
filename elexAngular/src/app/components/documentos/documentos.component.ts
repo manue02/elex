@@ -11,6 +11,7 @@ import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-documentos',
+  standalone: false,
 	templateUrl: './documentos.component.html',
 	styleUrl: './documentos.component.css',
 })

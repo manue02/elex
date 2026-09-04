@@ -12,6 +12,7 @@ import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-expedientes',
+  standalone: false,
 	templateUrl: './expedientes.component.html',
 	styleUrl: './expedientes.component.css',
 })
