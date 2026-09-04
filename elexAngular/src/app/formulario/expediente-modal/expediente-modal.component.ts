@@ -11,6 +11,7 @@ import { map, startWith, debounceTime } from 'rxjs/operators'
 
 @Component({
 	selector: 'app-expediente-modal',
+  standalone: false,
 	templateUrl: './expediente-modal.component.html',
 	styleUrl: './expediente-modal.component.css',
 })

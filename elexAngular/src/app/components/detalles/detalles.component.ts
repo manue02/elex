@@ -14,6 +14,7 @@ import { Router } from '@angular/router'
 
 @Component({
 	selector: 'app-detalles',
+  standalone: false,
 	templateUrl: './detalles.component.html',
 	styleUrl: './detalles.component.css',
 })

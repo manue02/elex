@@ -11,6 +11,7 @@ import { of } from 'rxjs'
 
 @Component({
 	selector: 'app-tipo-expediente',
+  standalone: false,
 	templateUrl: './tipo-expediente.component.html',
 	styleUrl: './tipo-expediente.component.css',
 })

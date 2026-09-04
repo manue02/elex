@@ -10,6 +10,7 @@ import { ExpedienteService } from '../../service/expediente/expediente.service'
 
 @Component({
 	selector: 'app-actuaciones-modal',
+  standalone: false,
 	templateUrl: './actuaciones-modal.component.html',
 	styleUrl: './actuaciones-modal.component.css',
 })
